@@ -1,7 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
+const mongoose = require("mongoose");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
+const authRoutes = require("./routes/authRoutes");
 const app = express();
 
 app.use(express.json());
@@ -12,9 +14,15 @@ app.use((req, res, next) => {
   next();
 });
 
+//All routes
+app.use("/api/v1/auth", authRoutes);
+
+
+//for fun
 app.get('/',(req,res)=>{
     res.status(200).send("Hello from server!!");
 });
+
 
 //Handling undefined routes not caught by above route
 app.use((req, res, next) => {
