@@ -1,13 +1,6 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
-
-const transporter = nodemailer.createTransport({
-  service: "gmail", // Or your preferred email service
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const transporter=require("./transporterMail");
 
 const sendOTPEmail = async (email, otp) => {
   const mailOptions = {
@@ -33,4 +26,42 @@ const sendOTPEmail = async (email, otp) => {
   }
 };
 
-module.exports = { sendOTPEmail };
+const sendResetPasswordLink = async(email,resetURL)=>{
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset Request",
+      text: `
+        You are receiving this email because you (or someone else) have requested a password reset.
+        
+        Please click on the following link or paste it into your browser to complete the process:
+        
+        ${resetURL}
+        
+        If you did not request this, please ignore this email and your password will remain unchanged.
+        
+        This link will expire in 10 minutes.
+      `,
+      html: `
+        <h1>Password Reset Request</h1>
+        <p>You are receiving this email because you (or someone else) have requested a password reset.</p>
+        <p>Please click the button below to reset your password:</p>
+        <a href="${resetURL}" style="background-color: #4CAF50; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block;">
+          Reset Password
+        </a>
+        <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+        <p><small>This link will expire in 10 minutes.</small></p>
+      `,
+    };
+
+    // Send email
+    try {
+      await transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error("Error sending email:", error);
+      return false;
+    }
+}
+
+module.exports = { sendOTPEmail,sendResetPasswordLink};

@@ -1,57 +1,17 @@
 const User = require("../models/userModal");
+const jwt = require("jsonwebtoken");
+const OTP = require("../models/otpSchema");
+const crypto = require("crypto");
 const { ObjectId } = require("mongoose").Types;
 const {
   generateAccessToken,
   generateRefreshToken,
 } = require("../utils/generateTokens");
-const jwt = require("jsonwebtoken");
+const {
+  sendOTPEmail,
+  sendResetPasswordLink,
+} = require("../utils/emailService");
 
-// @desc    Register new user
-// @route   POST /api/v1/auth/register
-// const registerUser = async (req, res) => {
-//   try {
-//     const { name, email, password, age, city, state, mobileNumber } = req.body;
-
-//     // Check if user already exists
-//     const userExists = await User.findOne({ email });
-//     if (userExists) {
-//       return res.status(400).json({ message: "User already exists" });
-//     }
-
-//     // Create user
-//     const user = await User.create({
-//       name,
-//       email,
-//       password,
-//       age,
-//       city,
-//       state,
-//       mobileNumber,
-//       role
-//     });
-
-//     // Generate tokens
-//     const accessToken = generateAccessToken(user._id);
-//     const refreshToken = generateRefreshToken(user._id);
-
-//     // Save refresh token to user
-//     user.refreshToken = refreshToken;
-//     await user.save();
-
-//     res.status(201).json({
-//       _id: user._id,
-//       name: user.name,
-//       email: user.email,
-//       accessToken,
-//       refreshToken,
-//     });
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// };
-const OTP = require("../models/otpSchema");
-const { sendOTPEmail } = require("../utils/emailService");
-const crypto = require("crypto");
 
 // Initial signup - generate and send OTP
 const initiateSignup = async (req, res) => {
@@ -305,13 +265,114 @@ const getProfile = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Find user by email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No user found with this email address",
+      });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    // Hash the token and save to database
+    user.resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    // Token expires in 10 minutes
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
+
+    await user.save();
+
+    // Construct reset URL (replace with your frontend URL)
+    const resetURL = `http://google.com/reset-password/${resetToken}`;
+
+    // Email options
+    const emailSent = await sendResetPasswordLink(email, resetURL);
+
+    if (!emailSent) {
+      return res
+        .status(500)
+        .json({ message: "Failed to send new password link" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset email sent",
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    // Hash the token to compare with stored token
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    // Find user with matching token that hasn't expired
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired reset token",
+      });
+    }
+
+    // Set new password
+    user.password = newPassword; // This will trigger the pre-save hook to hash the password
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+
+    await user.save();
+
+    // // Optional: Send confirmation email
+    // const mailOptions = {
+    //   from: process.env.EMAIL_USER,
+    //   to: user.email,
+    //   subject: "Password Successfully Reset",
+    //   text: "Your password has been successfully reset.",
+    // };
+
+    // await transporter.sendMail(mailOptions);
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset successful",
+    });
+  } catch (error) {
+    console.error("Password reset error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error resetting password",
+    });
+  }
+};
 
 module.exports = {
- // registerUser,
+  // registerUser,
   loginUser,
   refreshToken,
   logoutUser,
   getProfile,
   initiateSignup,
   verifyOTPAndRegister,
+  forgotPassword,
+  resetPassword
 };
