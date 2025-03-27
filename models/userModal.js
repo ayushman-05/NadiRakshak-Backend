@@ -47,6 +47,10 @@ const userSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
+    role: {
+      type: String,
+      enum: ["Inspection", "Public"],
+    },
   },
   {
     timestamps: true,

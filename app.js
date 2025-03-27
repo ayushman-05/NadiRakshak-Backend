@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+const session = require("express-session");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const authRoutes = require("./routes/authRoutes");
@@ -14,6 +15,18 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "your_fallback_secret_key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // 24 hours
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      httpOnly: true, // Prevents client-side JS from reading the cookie
+    },
+  })
+);
 //All routes
 app.use("/api/v1/auth", authRoutes);
 
@@ -22,7 +35,6 @@ app.use("/api/v1/auth", authRoutes);
 app.get('/',(req,res)=>{
     res.status(200).send("Hello from server!!");
 });
-
 
 //Handling undefined routes not caught by above route
 app.use((req, res, next) => {

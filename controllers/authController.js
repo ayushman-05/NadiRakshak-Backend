@@ -8,9 +8,56 @@ const jwt = require("jsonwebtoken");
 
 // @desc    Register new user
 // @route   POST /api/v1/auth/register
-const registerUser = async (req, res) => {
+// const registerUser = async (req, res) => {
+//   try {
+//     const { name, email, password, age, city, state, mobileNumber } = req.body;
+
+//     // Check if user already exists
+//     const userExists = await User.findOne({ email });
+//     if (userExists) {
+//       return res.status(400).json({ message: "User already exists" });
+//     }
+
+//     // Create user
+//     const user = await User.create({
+//       name,
+//       email,
+//       password,
+//       age,
+//       city,
+//       state,
+//       mobileNumber,
+//       role
+//     });
+
+//     // Generate tokens
+//     const accessToken = generateAccessToken(user._id);
+//     const refreshToken = generateRefreshToken(user._id);
+
+//     // Save refresh token to user
+//     user.refreshToken = refreshToken;
+//     await user.save();
+
+//     res.status(201).json({
+//       _id: user._id,
+//       name: user.name,
+//       email: user.email,
+//       accessToken,
+//       refreshToken,
+//     });
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
+const OTP = require("../models/otpSchema");
+const { sendOTPEmail } = require("../utils/emailService");
+const crypto = require("crypto");
+
+// Initial signup - generate and send OTP
+const initiateSignup = async (req, res) => {
   try {
-    const { name, email, password, age, city, state, mobileNumber } = req.body;
+    const { name, email, password, age, city, state, mobileNumber, role } =
+      req.body;
 
     // Check if user already exists
     const userExists = await User.findOne({ email });
@@ -18,8 +65,22 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Create user
-    const user = await User.create({
+    // Generate OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
+
+    // Store OTP in database
+    await OTP.findOneAndDelete({ email }); // Remove any existing OTP for this email
+    await OTP.create({ email, otp });
+
+    // Send OTP via email
+    const emailSent = await sendOTPEmail(email, otp);
+
+    if (!emailSent) {
+      return res.status(500).json({ message: "Failed to send OTP" });
+    }
+
+    // Store signup data in session or temporary storage
+    req.session.pendingSignup = {
       name,
       email,
       password,
@@ -27,13 +88,57 @@ const registerUser = async (req, res) => {
       city,
       state,
       mobileNumber,
+      role,
+    };
+
+    res.status(200).json({
+      message: "OTP sent successfully",
+      email,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Verify OTP and complete registration
+const verifyOTPAndRegister = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    // Check if signup data exists in session
+    const pendingSignup = req.session.pendingSignup;
+    if (!pendingSignup) {
+      return res.status(400).json({ message: "No pending signup found" });
+    }
+
+    // Verify OTP
+    const otpRecord = await OTP.findOne({ email, otp });
+    if (!otpRecord) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    // Create user
+    const user = await User.create({
+      name: pendingSignup.name,
+      email: pendingSignup.email,
+      password: pendingSignup.password,
+      age: pendingSignup.age,
+      city: pendingSignup.city,
+      state: pendingSignup.state,
+      mobileNumber: pendingSignup.mobileNumber,
+      role: pendingSignup.role,
     });
 
-    // Generate tokens
+    // Delete the OTP record
+    await OTP.findOneAndDelete({ email, otp });
+
+    // Clear session signup data
+    delete req.session.pendingSignup;
+
+    // Generate tokens (implement these functions as per your authentication logic)
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
-    // Save refresh token to user
     user.refreshToken = refreshToken;
     await user.save();
 
@@ -131,8 +236,6 @@ const logoutUser = async (req, res) => {
 };
 
 // Import ObjectId from Mongoose at the top of your file
-
-
 const getProfile = async (req, res) => {
   try {
     // Extract ID from request body
@@ -204,9 +307,11 @@ const getProfile = async (req, res) => {
 
 
 module.exports = {
-  registerUser,
+ // registerUser,
   loginUser,
   refreshToken,
   logoutUser,
-  getProfile
+  getProfile,
+  initiateSignup,
+  verifyOTPAndRegister,
 };
