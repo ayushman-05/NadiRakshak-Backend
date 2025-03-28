@@ -15,7 +15,7 @@ const app = require("./app");
 
 
 //MONGODB connection
-const DB = process.env.DATABASE.replace(
+const DB = process.env.MONGODB_URL.replace(
   "<PASSWORD>",
   process.env.DATABASE_PASSWORD
 );
