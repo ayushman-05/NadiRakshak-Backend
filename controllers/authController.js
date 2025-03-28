@@ -208,7 +208,7 @@ const getProfile = async (req, res) => {
         message: "User ID is required",
       });
     }
-    console.log("Requested profile ID:", id);
+   // console.log("Requested profile ID:", id);
 
     // Ensure the requester is accessing their own profile
     // Fix: If the IDs do NOT match, then return an unauthorized error.
@@ -222,7 +222,7 @@ const getProfile = async (req, res) => {
 
     // Find user by ID, excluding sensitive fields
     const user = await User.findById(id).select("-password -refreshToken -__v");
-    console.log("User lookup complete");
+    //console.log("User lookup complete");
 
     // Check if user exists
     if (!user) {
@@ -234,17 +234,19 @@ const getProfile = async (req, res) => {
 
     // Construct profile response
     const profile = {
-      username: user.name,
+      name: user.name,
       email: user.email,
       age: user.age,
       city: user.city,
       mobile: user.mobile,
+      state: user.state,
+      mobileNumber: user.mobileNumber
     };
 
     // Successful response
     res.status(200).json({
       success: true,
-      profile,
+      data: {...profile},
     });
   } catch (error) {
     console.error("Profile retrieval error:", error);
@@ -296,7 +298,6 @@ const forgotPassword = async (req, res) => {
     // Construct reset URL (replace with your frontend URL)
     const resetURL = `http://google.com/reset-password/${resetToken}`;
 
-    // Email options
     const emailSent = await sendResetPasswordLink(email, resetURL);
 
     if (!emailSent) {

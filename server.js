@@ -14,7 +14,6 @@ dotenv.config({path:"./config.env"});
 const app = require("./app");
 
 
-
 //MONGODB connection
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",

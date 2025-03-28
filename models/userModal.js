@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide your name"],
       trim: true,
-      minlength: [2, "Name must be at least 2 characters long"],
     },
     email: {
       type: String,
@@ -25,7 +24,7 @@ const userSchema = new mongoose.Schema(
     },
     age: {
       type: Number,
-      min: [18, "You must be at least 18 years old"],
+      min: [7, "You must be at least 7 years old"],
     },
     city: {
       type: String,

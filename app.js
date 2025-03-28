@@ -5,6 +5,7 @@ const session = require("express-session");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const authRoutes = require("./routes/authRoutes");
+const campaignRoutes = require("./routes/campaignRoutes");
 const app = express();
 
 app.use(express.json());
@@ -17,19 +18,19 @@ app.use((req, res, next) => {
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "your_fallback_secret_key",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      secure: process.env.NODE_ENV,
       httpOnly: true, // Prevents client-side JS from reading the cookie
     },
   })
 );
 //All routes
 app.use("/api/v1/auth", authRoutes);
-
+app.use("/api/v1/campaigns", campaignRoutes);
 
 //for fun
 app.get('/',(req,res)=>{
