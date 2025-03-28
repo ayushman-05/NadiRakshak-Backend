@@ -2,15 +2,12 @@ const User = require("../models/userModal");
 const jwt = require("jsonwebtoken");
 const OTP = require("../models/otpSchema");
 const crypto = require("crypto");
+const { sendOTPEmail } = require("../utils/emailService");
 const { ObjectId } = require("mongoose").Types;
 const {
   generateAccessToken,
   generateRefreshToken,
 } = require("../utils/generateTokens");
-const {
-  sendOTPEmail,
-  sendResetPasswordLink,
-} = require("../utils/emailService");
 
 
 // Initial signup - generate and send OTP
@@ -267,7 +264,59 @@ const getProfile = async (req, res) => {
   }
 };
 
-const forgotPassword = async (req, res) => {
+// const forgotPassword = async (req, res) => {
+//   try {
+//     const { email } = req.body;
+
+//     // Find user by email
+//     const user = await User.findOne({ email });
+
+//     if (!user) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "No user found with this email address",
+//       });
+//     }
+
+//     // Generate reset token
+//     const resetToken = crypto.randomBytes(32).toString("hex");
+
+//     // Hash the token and save to database
+//     user.resetPasswordToken = crypto
+//       .createHash("sha256")
+//       .update(resetToken)
+//       .digest("hex");
+
+//     // Token expires in 10 minutes
+//     user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
+
+//     await user.save();
+
+//     // Construct reset URL (replace with your frontend URL)
+//     const resetURL = `http://google.com/reset-password/${resetToken}`;
+
+//     const emailSent = await sendResetPasswordLink(email, resetURL);
+
+//     if (!emailSent) {
+//       return res
+//         .status(500)
+//         .json({ message: "Failed to send new password link" });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Password reset email sent",
+//     });
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
+
+
+// Temporary storage for verified reset attempts
+const passwordResetVerifications = new Map();
+
+const initiatePasswordReset = async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -281,90 +330,138 @@ const forgotPassword = async (req, res) => {
       });
     }
 
-    // Generate reset token
-    const resetToken = crypto.randomBytes(32).toString("hex");
+    // Generate OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
 
-    // Hash the token and save to database
-    user.resetPasswordToken = crypto
-      .createHash("sha256")
-      .update(resetToken)
-      .digest("hex");
+    // Store OTP in database
+    await OTP.findOneAndDelete({ email }); // Remove any existing OTP for this email
+    await OTP.create({ email, otp });
 
-    // Token expires in 10 minutes
-    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
-
-    await user.save();
-
-    // Construct reset URL (replace with your frontend URL)
-    const resetURL = `http://google.com/reset-password/${resetToken}`;
-
-    const emailSent = await sendResetPasswordLink(email, resetURL);
+    // Send OTP via email
+    const emailSent = await sendOTPEmail(email, otp);
 
     if (!emailSent) {
-      return res
-        .status(500)
-        .json({ message: "Failed to send new password link" });
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send OTP",
+      });
     }
 
     res.status(200).json({
       success: true,
-      message: "Password reset email sent",
+      message: "Password reset OTP sent",
+      email: email,
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const verifyPasswordResetOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    // Verify OTP
+    const otpRecord = await OTP.findOne({ email, otp });
+    if (!otpRecord) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP",
+      });
+    }
+
+    // Find user
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Generate a unique verification token
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+
+    // Store verification status with a 10-minute expiry
+    passwordResetVerifications.set(verificationToken, {
+      email,
+      timestamp: Date.now(),
+      verified: true,
+    });
+
+    // Delete the OTP record
+    await OTP.findOneAndDelete({ email, otp });
+
+    res.status(200).json({
+      success: true,
+      message: "OTP verified successfully",
+      verificationToken: verificationToken,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
 const resetPassword = async (req, res) => {
   try {
-    const { token } = req.params;
-    const { newPassword } = req.body;
+    const { verificationToken, newPassword } = req.body;
 
-    // Hash the token to compare with stored token
-    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    // Check if verification token exists and is valid
+    const verificationData = passwordResetVerifications.get(verificationToken);
 
-    // Find user with matching token that hasn't expired
-    const user = await User.findOne({
-      resetPasswordToken: hashedToken,
-      resetPasswordExpires: { $gt: Date.now() },
-    });
-
-    if (!user) {
+    if (!verificationData) {
       return res.status(400).json({
         success: false,
-        message: "Invalid or expired reset token",
+        message: "Invalid or expired verification",
       });
     }
 
-    // Set new password
-    user.password = newPassword; // This will trigger the pre-save hook to hash the password
-    user.resetPasswordToken = null;
-    user.resetPasswordExpires = null;
+    // Check if verification is recent (10 minutes)
+    const TEN_MINUTES = 10 * 60 * 1000;
+    if (Date.now() - verificationData.timestamp > TEN_MINUTES) {
+      // Remove expired verification
+      passwordResetVerifications.delete(verificationToken);
 
+      return res.status(400).json({
+        success: false,
+        message: "Verification expired. Please start over.",
+      });
+    }
+
+    // Find user
+    const user = await User.findOne({ email: verificationData.email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Update password
+    user.password = newPassword; // This will trigger pre-save hook to hash password
     await user.save();
 
-    // // Optional: Send confirmation email
-    // const mailOptions = {
-    //   from: process.env.EMAIL_USER,
-    //   to: user.email,
-    //   subject: "Password Successfully Reset",
-    //   text: "Your password has been successfully reset.",
-    // };
-
-    // await transporter.sendMail(mailOptions);
+    // Remove the verification token
+    passwordResetVerifications.delete(verificationToken);
 
     res.status(200).json({
       success: true,
       message: "Password reset successful",
     });
   } catch (error) {
-    console.error("Password reset error:", error);
-    res.status(500).json({
+    res.status(400).json({
       success: false,
-      message: "Error resetting password",
+      message: error.message,
     });
   }
 };
+
 
 module.exports = {
   // registerUser,
@@ -374,6 +471,7 @@ module.exports = {
   getProfile,
   initiateSignup,
   verifyOTPAndRegister,
-  forgotPassword,
-  resetPassword
+  initiatePasswordReset,
+  verifyPasswordResetOTP,
+  resetPassword,
 };

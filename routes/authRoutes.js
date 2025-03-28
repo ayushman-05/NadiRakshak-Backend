@@ -7,8 +7,9 @@ const {
   getProfile,
   initiateSignup,
   verifyOTPAndRegister,
-  forgotPassword,
-  resetPassword
+  initiatePasswordReset,
+  verifyPasswordResetOTP,
+  resetPassword,
 } = require("../controllers/authController");
 const { protect } = require("../middleware/authMiddleware");
 
@@ -19,7 +20,8 @@ router.post("/logout", protect, logoutUser);
 router.get("/profile/",protect,getProfile);
 router.post("/register", initiateSignup);
 router.post("/verify-otp", verifyOTPAndRegister);
-router.post('/reset-password/:token',resetPassword);
-router.post('/forgot-password',forgotPassword);
+router.post("/forgot-password", initiatePasswordReset);
+router.post("/verify-reset-otp", verifyPasswordResetOTP);
+router.post("/reset-password",resetPassword);
 
 module.exports = router;

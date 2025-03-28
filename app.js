@@ -11,12 +11,7 @@ const cors = require("cors");
 
 
 app.use(
-  cors({
-    origin: "*", // Mobile apps don’t send origin, so allow all
-    methods: "GET, POST, PUT, DELETE",
-    allowedHeaders: "Content-Type, Authorization",
-    credentials: true, // Keep this only if using cookies or authentication headers
-  })
+  cors()
 );
 app.use(express.json());
 app.use(morgan('dev'));
