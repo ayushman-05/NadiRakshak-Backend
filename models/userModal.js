@@ -58,6 +58,12 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    participatedCampaigns: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Campaign", // Add reference to Campaign model
+      },
+    ],
   },
   {
     timestamps: true,
@@ -77,6 +83,5 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;
+// Prevent model redefinition
+module.exports = mongoose.models.User || mongoose.model("User", userSchema);

@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
 
-const campaignSchema = new mongoose.Schema(
+const CampaignSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Campaign name is required"],
+      required: true,
       trim: true,
+    },
+    bannerImage: {
+      type: String, // URL or file path
+      default: null,
     },
     description: {
       type: String,
-      required: [true, "Campaign description is required"],
-    },
-    banner: {
-      type: String, // URL or path to image
-      default: null,
+      required: true,
     },
     creator: {
       type: mongoose.Schema.Types.ObjectId,
@@ -22,16 +22,22 @@ const campaignSchema = new mongoose.Schema(
     },
     startDate: {
       type: Date,
-      required: [true, "Campaign start date is required"],
+      required: true,
     },
     endDate: {
       type: Date,
-      required: [true, "Campaign end date is required"],
+      required: true,
     },
+    participants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     status: {
       type: String,
       enum: ["upcoming", "active", "finished"],
-      default: "upcoming", // Set default to upcoming
+      default: "upcoming",
     },
     isPaid: {
       type: Boolean,
@@ -41,57 +47,30 @@ const campaignSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    campaignLaunchFee: {
+    campaignCreationFee: {
       type: Number,
-      default: 2, // 2 Rs fixed fee as mentioned
+      default: 2, // 2 Rs as specified
     },
-    participants: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed"],
+      default: "pending",
+    },
     maxParticipants: {
       type: Number,
-      default: null, // Optional limit
+      default: null,
     },
-    paymentDetails: {
-      razorpayOrderId: String,
-      razorpayPaymentId: String,
-      razorpaySignature: String,
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
-    participantDetails: [
-      {
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-        participationPaymentDetails: {
-          razorpayOrderId: String,
-          razorpayPaymentId: String,
-          razorpaySignature: String,
-        },
-        registeredAt: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Pre-save middleware to update campaign status
-campaignSchema.pre("save", function (next) {
-  // Only update status if it's not explicitly set
-  if (this.isModified("status")) {
-    return next();
-  }
-
+// Pre-save middleware to update status based on dates
+CampaignSchema.pre("save", function (next) {
   const now = new Date();
-
   if (now < this.startDate) {
     this.status = "upcoming";
   } else if (now >= this.startDate && now <= this.endDate) {
@@ -99,10 +78,7 @@ campaignSchema.pre("save", function (next) {
   } else {
     this.status = "finished";
   }
-
   next();
 });
 
-const Campaign = mongoose.model("Campaign", campaignSchema);
-
-module.exports = Campaign;
+module.exports = mongoose.model("Campaign", CampaignSchema);

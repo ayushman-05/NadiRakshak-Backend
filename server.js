@@ -20,10 +20,14 @@ const DB = process.env.MONGODB_URL.replace(
   process.env.DATABASE_PASSWORD
 );
 
-mongoose.connect(DB).then((con) => {
-  //console.log(con.connection);
-  console.log("DB connection successful!");
-});
+mongoose
+  .connect(DB, {
+    autoIndex: true,
+  })
+  .then((con) => {
+    //console.log(con.connection);
+    console.log("DB connection successful!");
+  });
 
 
 const port = process.env.PORT;

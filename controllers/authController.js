@@ -1,5 +1,6 @@
 const User = require("../models/userModal");
 const jwt = require("jsonwebtoken");
+const TemporarySignup = require("../models/temporarySignupModel");
 const OTP = require("../models/otpSchema");
 const crypto = require("crypto");
 const { sendOTPEmail } = require("../utils/emailService");
@@ -11,33 +12,124 @@ const {
 
 
 // Initial signup - generate and send OTP
+// const initiateSignup = async (req, res) => {
+//   try {
+//     const { name, email, password, age, city, state, mobileNumber, role } =
+//       req.body;
+
+//     // Check if user already exists
+//     const userExists = await User.findOne({ email });
+//     if (userExists) {
+//       return res.status(400).json({ message: "User already exists" });
+//     }
+
+//     // Generate OTP
+//     const otp = crypto.randomInt(100000, 999999).toString();
+
+//     // Store OTP in database
+//     await OTP.findOneAndDelete({ email }); // Remove any existing OTP for this email
+//     await OTP.create({ email, otp });
+
+//     // Send OTP via email
+//     const emailSent = await sendOTPEmail(email, otp);
+
+//     if (!emailSent) {
+//       return res.status(500).json({ message: "Failed to send OTP" });
+//     }
+
+//     // Store signup data in session or temporary storage
+//     req.session.pendingSignup = {
+//       name,
+//       email,
+//       password,
+//       age,
+//       city,
+//       state,
+//       mobileNumber,
+//       role,
+//     };
+
+//     res.status(200).json({
+//       message: "OTP sent successfully",
+//       email,
+//     });
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
+
+// // Verify OTP and complete registration
+// const verifyOTPAndRegister = async (req, res) => {
+//   try {
+//     const { email, otp } = req.body;
+
+//     // Check if signup data exists in session
+//     const pendingSignup = req.session.pendingSignup;
+//     if (!pendingSignup) {
+//       return res.status(400).json({ message: "No pending signup found" });
+//     }
+
+//     // Verify OTP
+//     const otpRecord = await OTP.findOne({ email, otp });
+//     if (!otpRecord) {
+//       return res.status(400).json({ message: "Invalid OTP" });
+//     }
+
+//     // Create user
+//     const user = await User.create({
+//       name: pendingSignup.name,
+//       email: pendingSignup.email,
+//       password: pendingSignup.password,
+//       age: pendingSignup.age,
+//       city: pendingSignup.city,
+//       state: pendingSignup.state,
+//       mobileNumber: pendingSignup.mobileNumber,
+//       role: pendingSignup.role,
+//     });
+
+//     // Delete the OTP record
+//     await OTP.findOneAndDelete({ email, otp });
+
+//     // Clear session signup data
+//     delete req.session.pendingSignup;
+
+//     // Generate tokens (implement these functions as per your authentication logic)
+//     const accessToken = generateAccessToken(user._id);
+//     const refreshToken = generateRefreshToken(user._id);
+
+//     user.refreshToken = refreshToken;
+//     await user.save();
+
+//     res.status(201).json({
+//       _id: user._id,
+//       name: user.name,
+//       email: user.email,
+//       accessToken,
+//       refreshToken,
+//     });
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
 const initiateSignup = async (req, res) => {
   try {
     const { name, email, password, age, city, state, mobileNumber, role } =
       req.body;
 
-    // Check if user already exists
+    // Check if user already exists in permanent Users collection
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    // Check if there's an existing temporary signup
+    await TemporarySignup.findOneAndDelete({ email });
+
     // Generate OTP
     const otp = crypto.randomInt(100000, 999999).toString();
 
-    // Store OTP in database
-    await OTP.findOneAndDelete({ email }); // Remove any existing OTP for this email
-    await OTP.create({ email, otp });
-
-    // Send OTP via email
-    const emailSent = await sendOTPEmail(email, otp);
-
-    if (!emailSent) {
-      return res.status(500).json({ message: "Failed to send OTP" });
-    }
-
-    // Store signup data in session or temporary storage
-    req.session.pendingSignup = {
+    // Create temporary signup entry
+    const temporarySignup = new TemporarySignup({
       name,
       email,
       password,
@@ -46,7 +138,20 @@ const initiateSignup = async (req, res) => {
       state,
       mobileNumber,
       role,
-    };
+      otp,
+    });
+
+    // Save temporary signup
+    await temporarySignup.save();
+
+    // Send OTP via email
+    const emailSent = await sendOTPEmail(email, otp);
+
+    if (!emailSent) {
+      // Remove temporary signup if email fails
+      await TemporarySignup.findOneAndDelete({ email });
+      return res.status(500).json({ message: "Failed to send OTP" });
+    }
 
     res.status(200).json({
       message: "OTP sent successfully",
@@ -62,37 +167,29 @@ const verifyOTPAndRegister = async (req, res) => {
   try {
     const { email, otp } = req.body;
 
-    // Check if signup data exists in session
-    const pendingSignup = req.session.pendingSignup;
-    if (!pendingSignup) {
-      return res.status(400).json({ message: "No pending signup found" });
-    }
+    // Find temporary signup entry
+    const temporarySignup = await TemporarySignup.findOne({ email, otp });
 
-    // Verify OTP
-    const otpRecord = await OTP.findOne({ email, otp });
-    if (!otpRecord) {
+    if (!temporarySignup) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    // Create user
+    // Create permanent user
     const user = await User.create({
-      name: pendingSignup.name,
-      email: pendingSignup.email,
-      password: pendingSignup.password,
-      age: pendingSignup.age,
-      city: pendingSignup.city,
-      state: pendingSignup.state,
-      mobileNumber: pendingSignup.mobileNumber,
-      role: pendingSignup.role,
+      name: temporarySignup.name,
+      email: temporarySignup.email,
+      password: temporarySignup.password,
+      age: temporarySignup.age,
+      city: temporarySignup.city,
+      state: temporarySignup.state,
+      mobileNumber: temporarySignup.mobileNumber,
+      role: temporarySignup.role,
     });
 
-    // Delete the OTP record
-    await OTP.findOneAndDelete({ email, otp });
+    // Delete temporary signup entry
+    await TemporarySignup.findOneAndDelete({ email, otp });
 
-    // Clear session signup data
-    delete req.session.pendingSignup;
-
-    // Generate tokens (implement these functions as per your authentication logic)
+    // Generate tokens
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
