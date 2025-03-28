@@ -34,7 +34,7 @@ app.use("/api/v1/campaigns", campaignRoutes);
 
 //for fun
 app.get('/',(req,res)=>{
-    res.status(200).send("Hello from server!!");
+    res.send("Hello from server!!");
 });
 
 //Handling undefined routes not caught by above route
