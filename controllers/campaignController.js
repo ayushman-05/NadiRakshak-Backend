@@ -39,8 +39,9 @@ exports.createCampaign = async (req, res) => {
 
     // Create Razorpay order for campaign launch fee
     const launchOrder = await RazorpayService.createCampaignLaunchOrder(
-      campaign.campaignLaunchFee,
-      req.user._id
+      campaign.campaignLaunchFee,  // Fee from the campaign model
+        req.user._id,
+        campaign._id  // Pass the campaign ID
     );
 
     // Attach Razorpay order details to campaign

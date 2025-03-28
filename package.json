@@ -14,8 +14,10 @@
     "start": "nodemon server.js"
   },
   "dependencies": {
+    "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
+    "create-react-app": "^5.1.0",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "express": "^5.0.1",
@@ -27,6 +29,8 @@
     "ngrok": "^5.0.0-beta.2",
     "nodemailer": "^6.10.0",
     "razorpay": "^2.9.6",
+    "razorpay-checkout": "^1.0.4",
+    "react-toastify": "^11.0.5",
     "stripe": "^17.7.0",
     "uuid": "^11.1.0",
     "validator": "^13.15.0"

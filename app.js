@@ -10,8 +10,14 @@ const app = express();
 const cors = require("cors");
 
 
-app.use(cors());   
-
+app.use(
+  cors({
+    origin: "*", // Mobile apps don’t send origin, so allow all
+    methods: "GET, POST, PUT, DELETE",
+    allowedHeaders: "Content-Type, Authorization",
+    credentials: true, // Keep this only if using cookies or authentication headers
+  })
+);
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -28,7 +34,7 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours
       secure: process.env.NODE_ENV,
-      httpOnly: true, // Prevents client-side JS from reading the cookie
+      // Prevents client-side JS from reading the cookie
     },
   })
 );

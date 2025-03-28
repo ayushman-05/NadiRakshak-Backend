@@ -11,20 +11,13 @@ class RazorpayService {
 
   // Create order for campaign launch fee
   async createCampaignLaunchOrder(amount, userId) {
-    // const options = {
-    //   amount: amount * 100, // Convert to paise
-    //   currency: "INR",
-    //   receipt: `campaign_launch_${userId}_${Date.now()}`,
-    //   payment_capture: 1, // Auto-capture payment
-    // };
-
-    // Updated order creation logic
     const options = {
-      amount: campaign.campaignLaunchFee * 100, // amount in paise
+      amount: amount * 100, // Convert to paise
       currency: "INR",
-      receipt: `launch_${campaign._id.toString().slice(-10)}`, // Truncate to last 10 chars
-      payment_capture: 1,
+      receipt: `campaign_launch_${userId}_${Date.now()}`,
+      payment_capture: 1, // Auto-capture payment
     };
+
     try {
       const order = await this.razorpay.orders.create(options);
       return order;
@@ -37,9 +30,9 @@ class RazorpayService {
   // Create order for campaign participation fee
   async createParticipationOrder(amount, userId, campaignId) {
     const options = {
-      amount: campaign.participationFee * 100, // amount in paise
+      amount: amount * 100, // Convert to paise
       currency: "INR",
-      receipt: `join_${campaign._id.toString().slice(-10)}_${Date.now()}`, // Unique, short receipt
+      receipt: `join_${campaignId}_${userId}_${Date.now()}`,
       payment_capture: 1,
     };
 

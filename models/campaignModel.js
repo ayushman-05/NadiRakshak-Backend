@@ -31,7 +31,7 @@ const campaignSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["upcoming", "active", "finished"],
-      default: "upcoming",
+      default: "upcoming", // Set default to upcoming
     },
     isPaid: {
       type: Boolean,
@@ -85,6 +85,11 @@ const campaignSchema = new mongoose.Schema(
 
 // Pre-save middleware to update campaign status
 campaignSchema.pre("save", function (next) {
+  // Only update status if it's not explicitly set
+  if (this.isModified("status")) {
+    return next();
+  }
+
   const now = new Date();
 
   if (now < this.startDate) {
