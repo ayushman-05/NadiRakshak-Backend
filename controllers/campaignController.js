@@ -1,5 +1,5 @@
-const Campaign = require("../models/CampaignModel");
-const User = require("../models/UserModal");
+const Campaign = require("../models/campaignModel");
+const User = require("../models/userModal");
 const Instamojo = require("instamojo-nodejs");
 
 // Configure Instamojo (you'll need to get these from Instamojo dashboard)
