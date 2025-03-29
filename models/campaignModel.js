@@ -1,37 +1,69 @@
 const mongoose = require("mongoose");
 
-const CampaignSchema = new mongoose.Schema(
+const campaignSchema = new mongoose.Schema(
   {
-    name: {
+    title: {
       type: String,
-      required: true,
+      required: [true, "Please provide a campaign title"],
       trim: true,
-    },
-    bannerImage: {
-      type: String, // URL or file path
-      default: null,
+      maxlength: [100, "Campaign title cannot exceed 100 characters"],
     },
     description: {
       type: String,
-      required: true,
+      required: [true, "Please provide a campaign description"],
+      trim: true,
+      maxlength: [1000, "Description cannot exceed 1000 characters"],
+    },
+    location: {
+      type: String,
+      required: [true, "Please provide a campaign location"],
+      trim: true,
+    },
+    startDate: {
+      type: Date,
+      required: [true, "Please provide a start date"],
+      validate: {
+        validator: function (value) {
+          return value >= new Date();
+        },
+        message: "Start date cannot be in the past",
+      },
+    },
+    endDate: {
+      type: Date,
+      required: [true, "Please provide an end date"],
+      validate: {
+        validator: function (value) {
+          return value > this.startDate;
+        },
+        message: "End date must be after start date",
+      },
+    },
+    maxParticipants: {
+      type: Number,
+      required: [true, "Please provide the maximum number of participants"],
+      min: [1, "A campaign must have at least 1 participant"],
+      max: [1000, "A campaign cannot have more than 1000 participants"],
     },
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
-    },
-    startDate: {
-      type: Date,
-      required: true,
-    },
-    endDate: {
-      type: Date,
-      required: true,
+      required: [true, "A campaign must have a creator"],
     },
     participants: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        joinedAt: {
+          type: Date,
+          default: Date.now,
+        },
+        additionalInfo: {
+          type: Object,
+          default: {},
+        },
       },
     ],
     status: {
@@ -39,38 +71,37 @@ const CampaignSchema = new mongoose.Schema(
       enum: ["upcoming", "active", "finished"],
       default: "upcoming",
     },
-    isPaid: {
-      type: Boolean,
-      default: false,
-    },
-    participationFee: {
-      type: Number,
-      default: 0,
-    },
-    campaignCreationFee: {
-      type: Number,
-      default: 2, // 2 Rs as specified
-    },
-    paymentStatus: {
+    category: {
       type: String,
-      enum: ["pending", "paid", "failed"],
-      default: "pending",
+      required: [true, "Please provide a campaign category"],
+      enum: ["Environment", "Health", "Education", "Social", "Other"],
     },
-    maxParticipants: {
-      type: Number,
-      default: null,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+    image: {
+      type: String,
+      default: "default-campaign.jpg",
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
 
-// Pre-save middleware to update status based on dates
-CampaignSchema.pre("save", function (next) {
+// Virtual property to compute remaining spots
+campaignSchema.virtual("spotsRemaining").get(function () {
+  return this.maxParticipants - this.participants.length;
+});
+
+// Indexes for better query performance
+campaignSchema.index({ startDate: 1, endDate: 1 });
+campaignSchema.index({ status: 1 });
+campaignSchema.index({ creator: 1 });
+
+// Auto-update status based on dates
+campaignSchema.pre("save", function (next) {
   const now = new Date();
+
   if (now < this.startDate) {
     this.status = "upcoming";
   } else if (now >= this.startDate && now <= this.endDate) {
@@ -78,7 +109,26 @@ CampaignSchema.pre("save", function (next) {
   } else {
     this.status = "finished";
   }
+
   next();
 });
 
-module.exports = mongoose.model("Campaign", CampaignSchema);
+// Static method to update statuses of all campaigns
+campaignSchema.statics.updateAllCampaignStatuses = async function () {
+  const now = new Date();
+
+  // Update upcoming to active
+  await this.updateMany(
+    { status: "upcoming", startDate: { $lte: now } },
+    { status: "active" }
+  );
+
+  // Update active to finished
+  await this.updateMany(
+    { status: "active", endDate: { $lt: now } },
+    { status: "finished" }
+  );
+};
+
+module.exports =
+  mongoose.models.Campaign || mongoose.model("Campaign", campaignSchema);
