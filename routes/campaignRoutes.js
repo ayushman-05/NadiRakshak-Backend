@@ -1,17 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const {
-  createCampaign,
-  getAllCampaigns,
-  getCampaign,
-  updateCampaign,
-  deleteCampaign,
   joinCampaign,
   leaveCampaign,
+} = require("../controllers/campaigns/participantCampaign");
+const {
+  createCampaign,
+  updateCampaign,
+  deleteCampaign,
+} = require("../controllers/campaigns/creatorCampaign");
+const {
+  getAllCampaigns,
+  getCampaign,
   getUserCampaigns,
   getCampaignParticipants,
+} = require("../controllers/campaigns/getCampaigns");
+const {
   updateCampaignStatuses,
-} = require("../controllers/campaignController");
+} = require("../controllers/campaigns/updateCampaignStatus");
 const { protect } = require("../middleware/authMiddleware");
 
 // Routes that require authentication
