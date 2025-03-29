@@ -18,7 +18,7 @@ const serviceAccount = {
   client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL,
 };
 
-console.log(process.env.FIREBASE_STORAGE_BUCKET);
+//console.log(process.env.FIREBASE_STORAGE_BUCKET);
 // Initialize Firebase Admin SDK
 const firebaseApp = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
