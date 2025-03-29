@@ -4,7 +4,7 @@ const AppError = require("../utils/appError");
 const transporter = require("../utils/transporterMail");
 const mongoose = require("mongoose");
 const { sanitize } = require("express-mongo-sanitize");
-
+//const Campaign=require("../models/campaignModel");
 // Helper to sanitize input data
 const sanitizeData = (data) => {
   // Use express-mongo-sanitize to prevent NoSQL injection
