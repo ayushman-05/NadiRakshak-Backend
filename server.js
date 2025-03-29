@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const { initializeApp} = require("firebase/app");
 
 process.on("uncaughtException", (err) => {
   console.log(err.name, err.message);
@@ -17,18 +16,18 @@ process.on("uncaughtException", (err) => {
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBdhantGlqIx9HC3vChZv18A0ErgGocV90",
-  authDomain: "nadirakshak-39327.firebaseapp.com",
-  projectId: "nadirakshak-39327",
-  storageBucket: "nadirakshak-39327.firebasestorage.app",
-  messagingSenderId: "994996342354",
-  appId: "1:994996342354:web:9a379e458703dc5018198b",
-  measurementId: "G-Y0F82XN83Q",
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBdhantGlqIx9HC3vChZv18A0ErgGocV90",
+//   authDomain: "nadirakshak-39327.firebaseapp.com",
+//   projectId: "nadirakshak-39327",
+//   storageBucket: "nadirakshak-39327.firebasestorage.app",
+//   messagingSenderId: "994996342354",
+//   appId: "1:994996342354:web:9a379e458703dc5018198b",
+//   measurementId: "G-Y0F82XN83Q",
+// };
 
-// Initialize Firebase
-const app2 = initializeApp(firebaseConfig);
+// // Initialize Firebase
+// const app2 = initializeApp(firebaseConfig);
 //const analytics = getAnalytics(app2);
 
 dotenv.config({ path: "./config.env" });

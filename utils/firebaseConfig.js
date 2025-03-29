@@ -1,7 +1,7 @@
 // utils/firebaseConfig.js
 const admin = require("firebase-admin");
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({ path: "../config.env" });
 
 // Initialize Firebase Admin with service account
 // This expects your Firebase service account credentials in your environment variables
@@ -18,6 +18,7 @@ const serviceAccount = {
   client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL,
 };
 
+console.log(process.env.FIREBASE_STORAGE_BUCKET);
 // Initialize Firebase Admin SDK
 const firebaseApp = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

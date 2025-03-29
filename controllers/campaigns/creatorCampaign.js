@@ -48,7 +48,7 @@ const createCampaign = async (req, res) => {
       } catch (uploadError) {
         return res.status(400).json({
           status: "fail",
-          message: `Image upload failed: ${uploadError.message}`,
+          message: `Image upload failed: ${uploadError}`,
         });
       }
     }
