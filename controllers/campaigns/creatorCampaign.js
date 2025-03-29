@@ -1,8 +1,10 @@
+// controllers/campaigns/creatorCampaign.js
 const Campaign = require("../../models/campaignModel");
 const User = require("../../models/userModal");
 const mongoose = require("mongoose");
 const { sanitize } = require("express-mongo-sanitize");
-//const Campaign=require("../models/campaignModel");
+const { uploadFileToFirebase } = require("../../utils/fileUpload");
+
 // Helper to sanitize input data
 const sanitizeData = (data) => {
   // Use express-mongo-sanitize to prevent NoSQL injection
@@ -38,10 +40,24 @@ const createCampaign = async (req, res) => {
     // Sanitize input data
     const sanitizedData = sanitizeData(req.body);
 
-    // Create new campaign
+    // Handle image upload if a file was provided
+    let imageUrl = "default-campaign.jpg";
+    if (req.file) {
+      try {
+        imageUrl = await uploadFileToFirebase(req.file, "campaigns");
+      } catch (uploadError) {
+        return res.status(400).json({
+          status: "fail",
+          message: `Image upload failed: ${uploadError.message}`,
+        });
+      }
+    }
+
+    // Create new campaign with image URL
     const campaign = await Campaign.create({
       ...sanitizedData,
       creator: req.user._id,
+      image: imageUrl,
     });
 
     res.status(201).json({
@@ -101,6 +117,18 @@ const updateCampaign = async (req, res) => {
       });
     }
 
+    // Handle image upload if a new image was provided
+    if (req.file) {
+      try {
+        sanitizedData.image = await uploadFileToFirebase(req.file, "campaigns");
+      } catch (uploadError) {
+        return res.status(400).json({
+          status: "fail",
+          message: `Image upload failed: ${uploadError.message}`,
+        });
+      }
+    }
+
     const updatedCampaign = await Campaign.findByIdAndUpdate(
       req.params.id,
       sanitizedData,
@@ -123,7 +151,8 @@ const updateCampaign = async (req, res) => {
     });
   }
 };
-// Delete campaign
+
+// Delete campaign (existing code remains unchanged)
 const deleteCampaign = async (req, res) => {
   try {
     const campaign = await Campaign.findById(req.params.id);
