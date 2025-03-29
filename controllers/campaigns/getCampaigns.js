@@ -87,7 +87,9 @@ const getCampaign = async (req, res) => {
 
     // Check if the user is the creator to determine data visibility
     const isCreator = req.user && campaign.creator._id.equals(req.user._id);
-
+    const isParticipant =
+      req.user &&
+      campaign.participants.some((p) => p.user._id.equals(req.user._id));
     // If not creator, remove detailed participant information
     if (!isCreator) {
       campaign.participants = campaign.participants.map((p) => ({
@@ -101,6 +103,7 @@ const getCampaign = async (req, res) => {
       data: {
         campaign,
         isCreator,
+        isParticipant
       },
     });
   } catch (error) {
@@ -180,3 +183,5 @@ module.exports = {
   getUserCampaigns,
   getCampaignParticipants
 };
+
+
