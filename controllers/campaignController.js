@@ -261,7 +261,6 @@ const updateCampaign = async (req, res) => {
     });
   }
 };
-
 // Delete campaign
 const deleteCampaign = async (req, res) => {
   try {
@@ -282,20 +281,49 @@ const deleteCampaign = async (req, res) => {
       });
     }
 
-    // Only allow deleting upcoming campaigns with no participants
-    if (campaign.status !== "upcoming" || campaign.participants.length > 0) {
+    // Only allow deleting upcoming campaigns
+    if (campaign.status !== "upcoming") {
       return res.status(400).json({
         status: "fail",
-        message: "Can only delete upcoming campaigns with no participants",
+        message: "Can only delete upcoming campaigns",
       });
     }
 
-    await Campaign.findByIdAndDelete(req.params.id);
+    // Start a session to handle the transaction
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    res.status(204).json({
-      status: "success",
-      data: null,
-    });
+    try {
+      // If there are participants, remove the campaign from their participatedCampaigns
+      if (campaign.participants.length > 0) {
+        // Get array of participant user IDs
+        const participantIds = campaign.participants.map(p => p.user);
+        
+        // Update all participants to remove this campaign from their participatedCampaigns array
+        await User.updateMany(
+          { _id: { $in: participantIds } },
+          { $pull: { participatedCampaigns: campaign._id } },
+          { session }
+        );
+      }
+
+      // Delete the campaign
+      await Campaign.findByIdAndDelete(req.params.id, { session });
+
+      // Commit the transaction
+      await session.commitTransaction();
+      session.endSession();
+
+      res.status(204).json({
+        status: "success",
+        data: null,
+      });
+    } catch (error) {
+      // If an error occurs, abort the transaction
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   } catch (error) {
     res.status(400).json({
       status: "fail",
@@ -303,6 +331,47 @@ const deleteCampaign = async (req, res) => {
     });
   }
 };
+// Delete campaign
+// const deleteCampaign = async (req, res) => {
+//   try {
+//     const campaign = await Campaign.findById(req.params.id);
+
+//     if (!campaign) {
+//       return res.status(404).json({
+//         status: "fail",
+//         message: "Campaign not found",
+//       });
+//     }
+
+//     // Check if user is the creator
+//     if (!campaign.creator.equals(req.user._id)) {
+//       return res.status(403).json({
+//         status: "fail",
+//         message: "You are not authorized to delete this campaign",
+//       });
+//     }
+
+//     // Only allow deleting upcoming campaigns with no participants
+//     if (campaign.status !== "upcoming" || campaign.participants.length > 0) {
+//       return res.status(400).json({
+//         status: "fail",
+//         message: "Can only delete upcoming campaigns with no participants",
+//       });
+//     }
+
+//     await Campaign.findByIdAndDelete(req.params.id);
+
+//     res.status(204).json({
+//       status: "success",
+//       data: null,
+//     });
+//   } catch (error) {
+//     res.status(400).json({
+//       status: "fail",
+//       message: error.message,
+//     });
+//   }
+// };
 
 // Join a campaign
 const joinCampaign = async (req, res) => {
