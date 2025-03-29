@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const {
+  searchCampaigns,
+  advancedSearchCampaigns,
+} = require("../controllers/campaigns/searchCampaigns");
+
+const {
   joinCampaign,
   leaveCampaign,
 } = require("../controllers/campaigns/participantCampaign");
@@ -24,10 +29,11 @@ const { protect } = require("../middleware/authMiddleware");
 //router.use(protect);
 
 // Campaign management
+// Add these routes to your existing router in routes/campaignRoutes.js
+router.route("/search").get(protect, searchCampaigns);
+router.route("/advanced-search").get(protect, advancedSearchCampaigns);
 router.route("/").get(protect, getAllCampaigns).post(protect, createCampaign);
-
 router.route("/my-campaigns").get(protect, getUserCampaigns);
-
 router.route("/update-statuses").patch(updateCampaignStatuses);
 
 router
@@ -38,9 +44,7 @@ router
 
 // Participation
 router.route("/:id/join").post(protect, joinCampaign);
-
 router.route("/:id/leave").delete(protect, leaveCampaign);
-
 router.route("/:id/participants").get(protect, getCampaignParticipants);
 
 module.exports = router;

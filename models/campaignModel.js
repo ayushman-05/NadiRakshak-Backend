@@ -130,5 +130,23 @@ campaignSchema.statics.updateAllCampaignStatuses = async function () {
   );
 };
 
+campaignSchema.index(
+  {
+    title: "text",
+    description: "text",
+    location: "text",
+    category: "text",
+  },
+  {
+    weights: {
+      title: 10, // Title matches are most important
+      description: 5, // Description matches are next important
+      location: 2, // Location is less important
+      category: 3, // Category has medium importance
+    },
+    name: "campaign_text_index",
+  }
+);
+
 module.exports =
   mongoose.models.Campaign || mongoose.model("Campaign", campaignSchema);

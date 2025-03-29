@@ -58,6 +58,10 @@ const initiateSignup = async (req, res) => {
   }
 };
 
+const resendOTP = async (req,res)=>{
+  
+}
+
 // Verify OTP and complete registration
 const verifyOTPAndRegister = async (req, res) => {
   try {
