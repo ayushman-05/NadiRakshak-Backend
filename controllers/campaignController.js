@@ -312,8 +312,8 @@ const joinCampaign = async (req, res) => {
 
     try {
       // Sanitize input data
-      const sanitizedData = sanitizeData(req.body);
-      const { additionalInfo } = sanitizedData;
+      //const sanitizedData = sanitizeData(req.body);
+      const { additionalInfo } = req.user;
 
       // Find campaign
       const campaign = await Campaign.findById(req.params.id).session(session);
