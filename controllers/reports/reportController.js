@@ -50,14 +50,11 @@ const submitReport = async (req, res) => {
     }
 
     // 4. Validate required fields
-    if (!draft.description || !req.body.severity) {
+    if (!req.body.description || !req.body.severity) {
       return res.status(400).json({
-        message: "Description and severity are required",
+        message: "Description and severity are required in body of this submit request",
       });
     }
-
-    //console.log(draft);
-
     // 5. Create final report
     const reportData = {
       userId: req.user._id,

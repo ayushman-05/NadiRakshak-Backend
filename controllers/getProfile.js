@@ -1,46 +1,28 @@
 const User = require("../models/userModal");
 const Campaign = require("../models/campaignModel");
-// Import ObjectId from Mongoose at the top of your file
+
 const getProfile = async (req, res) => {
   try {
     // Find the user and populate participated campaigns with essential info
     const user = await User.findById(req.user._id).populate({
       path: "participatedCampaigns",
-      select:
-        "title description status startDate endDate category image location spotsRemaining maxParticipants",
+      select: "title",
     });
 
-    // Find campaigns created by the user
+    // Find campaigns created by the user - include participants field
     const createdCampaigns = await Campaign.find({
       creator: req.user._id,
     }).select(
-      "title description status startDate endDate category image location spotsRemaining maxParticipants participants"
+      "title participants" // Added participants to the select fields
     );
 
     // Calculate user statistics
     const stats = {
       totalCampaignsCreated: createdCampaigns.length,
       totalCampaignsJoined: user.participatedCampaigns.length,
-      activeCampaignsCreated: createdCampaigns.filter(
-        (c) => c.status === "active"
-      ).length,
-      activeCampaignsJoined: user.participatedCampaigns.filter(
-        (c) => c.status === "active"
-      ).length,
-      upcomingCampaignsCreated: createdCampaigns.filter(
-        (c) => c.status === "upcoming"
-      ).length,
-      upcomingCampaignsJoined: user.participatedCampaigns.filter(
-        (c) => c.status === "upcoming"
-      ).length,
-      finishedCampaignsCreated: createdCampaigns.filter(
-        (c) => c.status === "finished"
-      ).length,
-      finishedCampaignsJoined: user.participatedCampaigns.filter(
-        (c) => c.status === "finished"
-      ).length,
       totalParticipantsManaged: createdCampaigns.reduce(
-        (total, campaign) => total + campaign.participants.length,
+        (total, campaign) =>
+          total + (campaign.participants ? campaign.participants.length : 0),
         0
       ),
     };
@@ -56,8 +38,7 @@ const getProfile = async (req, res) => {
       role: user.role,
       memberSince: user.createdAt,
       stats: stats,
-      participatedCampaigns: user.participatedCampaigns,
-      createdCampaigns: createdCampaigns,
+      //participatedCampaigns: user.participatedCampaigns,
     };
 
     res.status(200).json({
