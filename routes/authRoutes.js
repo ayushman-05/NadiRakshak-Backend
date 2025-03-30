@@ -10,7 +10,7 @@ const {
   initiateSignup,
   verifyOTPAndRegister,
 } = require("../controllers/authSignupController");
-const { getProfile } = require("../controllers/getProfile");
+const { getProfile, updateProfile } = require("../controllers/getProfile");
 const {
   loginUser,
   refreshToken,
@@ -36,6 +36,7 @@ router.post("/logout", protect, logoutUser);
 router.get("/profile/", protect, getProfile);
 
 // for resetting password
+router.patch("/profile/", protect, updateProfile); 
 router.post("/forgot-password", initiatePasswordReset);
 router.post("/verify-reset-otp", verifyPasswordResetOTP);
 router.post("/reset-password", resetPassword);

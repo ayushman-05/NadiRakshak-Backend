@@ -54,7 +54,58 @@ const getProfile = async (req, res) => {
     });
   }
 };
+const updateProfile = async (req, res) => {
+  try {
+    // Get user from protect middleware
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Extract allowed fields to update
+    const { name, age, city, state, mobileNumber } = req.body;
+
+    // Update only provided fields
+    if (name) user.name = name;
+    if (age) user.age = age;
+    if (city) user.city = city;
+    if (state) user.state = state;
+    if (mobileNumber) user.mobileNumber = mobileNumber;
+
+    // Ensure we're not modifying email or password
+    if (req.body.email || req.body.password) {
+      return res.status(400).json({
+        message: "Email and password cannot be updated through this endpoint",
+      });
+    }
+
+    // Save the updated user
+    await user.save();
+
+    // Return the updated profile without sensitive information
+    res.status(200).json({
+      status: "success",
+      data: {
+        profile: {
+          name: user.name,
+          age: user.age,
+          city: user.city,
+          state: user.state,
+          mobileNumber: user.mobileNumber,
+          role: user.role,
+        },
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
+   updateProfile,
   getProfile,
 };
