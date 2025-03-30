@@ -52,5 +52,46 @@ const uploadFileToFirebase = async (file, folder = "campaigns") => {
     throw new Error(`Failed to upload file: ${error.message}`);
   }
 };
+// utils/fileUpload.js
+// Add this function to the existing file
 
-module.exports = { uploadFileToFirebase };
+/**
+ * Deletes a file from Firebase Storage
+ * @param {String} fileUrl - The URL of the file to delete
+ * @returns {Promise<Boolean>} True if deletion was successful
+ */
+const deleteFileFromFirebase = async (fileUrl) => {
+  try {
+    // Extract the file path from the URL
+    const urlParts = fileUrl.split('?')[0].split('/');
+    const fileName = urlParts[urlParts.length - 1];
+    const decodedFileName = decodeURIComponent(fileName);
+    
+    // Find the folder path in the URL
+    let filePath = '';
+    for (let i = 0; i < urlParts.length; i++) {
+      if (urlParts[i] === 'o') {
+        filePath = urlParts[i + 1];
+        break;
+      }
+    }
+    
+    if (!filePath) {
+      throw new Error('Could not determine file path from URL');
+    }
+    
+    // Create a reference to the file
+    const fileRef = bucket.file(filePath);
+    
+    // Delete the file
+    await fileRef.delete();
+    
+    return true;
+  } catch (error) {
+    console.error('Error deleting file from Firebase:', error);
+    return false;
+  }
+};
+
+module.exports = { uploadFileToFirebase, deleteFileFromFirebase };
+//module.exports = { uploadFileToFirebase };

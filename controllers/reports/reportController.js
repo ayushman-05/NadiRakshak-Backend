@@ -1,0 +1,67 @@
+const Report = require("../../models/reportModel");
+const DraftReport = require("../../models/draftReportModel");
+
+const submitReport = async (req, res) => {
+  try {
+    // 1. Find the draft
+    const draft = await DraftReport.findOne({
+      _id: req.params.draftId,
+      userId: req.user._id,
+    });
+
+    if (!draft) {
+      return res.status(404).json({ message: "Draft not found" });
+    }
+
+    // 2. Check if user has submitted a report nearby in the last 24 hours
+    const nearbyReports = await Report.find({
+      userId: req.user._id,
+      location: {
+        $near: {
+          $geometry: draft.location,
+          $maxDistance: 200, // 200 meters
+        },
+      },
+      createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+    });
+
+    if (nearbyReports.length > 0) {
+      return res.status(400).json({
+        message:
+          "You have already submitted a report within 200 meters in the last 24 hours",
+      });
+    }
+
+    // 3. Validate required fields
+    if (!draft.description || !req.body.severity) {
+      return res.status(400).json({
+        message: "Description and severity are required",
+      });
+    }
+
+    // 4. Create final report
+    const reportData = {
+      userId: req.user._id,
+      imageUrl: draft.imageUrl,
+      location: draft.location,
+      description: req.body.description || draft.description,
+      severitySuggestion: draft.severitySuggestion,
+      severity: req.body.severity || draft.severity,
+    };
+
+    const report = new Report(reportData);
+    await report.save();
+
+    // 5. Delete the draft
+    await DraftReport.findByIdAndDelete(draft._id);
+
+    res.status(201).json({
+      message: "Report submitted successfully",
+      report,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { submitReport };

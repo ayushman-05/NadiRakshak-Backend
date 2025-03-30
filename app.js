@@ -5,7 +5,7 @@ const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const authRoutes = require("./routes/authRoutes");
 const campaignRoutes = require("./routes/campaignRoutes");
-
+const reportRoutes = require("./routes/reportRoutes");
 const app = express();
 
 app.use(cors());
@@ -20,6 +20,8 @@ app.use((req, res, next) => {
 //All routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/campaigns", campaignRoutes);
+app.use("/api/v1/reports",reportRoutes);
+
 
 //for fun
 app.get("/", (req, res) => {
