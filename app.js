@@ -22,7 +22,6 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/campaigns", campaignRoutes);
 app.use("/api/v1/reports",reportRoutes);
 
-
 //for fun
 app.get("/", (req, res) => {
   res.send("Hello from server!!");

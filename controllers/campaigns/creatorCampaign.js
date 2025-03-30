@@ -77,6 +77,7 @@ const createCampaign = async (req, res) => {
 // Update campaign
 const updateCampaign = async (req, res) => {
   try {
+    //console.log(req.params);
     const campaign = await Campaign.findById(req.params.id);
 
     if (!campaign) {

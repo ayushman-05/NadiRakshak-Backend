@@ -21,23 +21,11 @@ const campaignSchema = new mongoose.Schema(
     },
     startDate: {
       type: Date,
-      required: [true, "Please provide a start date"],
-      validate: {
-        validator: function (value) {
-          return value >= new Date();
-        },
-        message: "Start date cannot be in the past",
-      },
+      required: [true, "Please provide a start date"]
     },
     endDate: {
       type: Date,
-      required: [true, "Please provide an end date"],
-      validate: {
-        validator: function (value) {
-          return value >= this.startDate;
-        },
-        message: "End date must be after start date",
-      },
+      required: [true, "Please provide an end date"]
     },
     maxParticipants: {
       type: Number,
