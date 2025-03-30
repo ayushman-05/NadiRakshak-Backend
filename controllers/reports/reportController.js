@@ -56,6 +56,8 @@ const submitReport = async (req, res) => {
       });
     }
 
+    //console.log(draft);
+
     // 5. Create final report
     const reportData = {
       userId: req.user._id,
