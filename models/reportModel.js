@@ -37,8 +37,19 @@ const reportSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["InReview", "Accepted", "Rejected"],
-      default: "InReview",
+      enum: ["Pending", "InReview", "Resolved", "Rejected"],
+      default: "Pending",
+    },
+    // Track reward distribution
+    rewards: {
+      submissionRewarded: {
+        type: Boolean,
+        default: false,
+      },
+      approvalRewarded: {
+        type: Boolean,
+        default: false,
+      },
     },
     createdAt: {
       type: Date,

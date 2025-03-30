@@ -16,6 +16,9 @@ const {
   refreshToken,
   logoutUser,
 } = require("../controllers/authLoginController.js")
+const {
+  getUserPoints,getUserPointsHistory
+} =require("../controllers/getPoints.js");
 const { protect } = require("../middleware/authMiddleware");
 
 
@@ -36,5 +39,6 @@ router.get("/profile/", protect, getProfile);
 router.post("/forgot-password", initiatePasswordReset);
 router.post("/verify-reset-otp", verifyPasswordResetOTP);
 router.post("/reset-password", resetPassword);
-
+router.get("/points",protect,getUserPoints);
+router.get("/points-history",protect,getUserPointsHistory);
 module.exports = router;

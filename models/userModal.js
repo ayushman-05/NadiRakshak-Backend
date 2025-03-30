@@ -61,7 +61,45 @@ const userSchema = new mongoose.Schema(
     participatedCampaigns: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Campaign", // Add reference to Campaign model
+        ref: "Campaign",
+      },
+    ],
+    // New field for points system
+    points: {
+      type: Number,
+      default: 0,
+    },
+    // Track point transactions for audit and history
+    pointsHistory: [
+      {
+        points: {
+          type: Number,
+          required: true,
+        },
+        reason: {
+          type: String,
+          required: true,
+        },
+        source: {
+          type: String,
+          enum: [
+            "signup",
+            "campaign_creation",
+            "campaign_participation",
+            "report_submission",
+            "report_approval",
+            "store_purchase",
+          ],
+          required: true,
+        },
+        sourceId: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: false,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
   },
@@ -81,6 +119,25 @@ userSchema.pre("save", async function (next) {
 // Method to check password
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// Method to add points
+userSchema.methods.addPoints = async function (
+  points,
+  reason,
+  source,
+  sourceId
+) {
+  this.points += points;
+
+  this.pointsHistory.push({
+    points,
+    reason,
+    source,
+    sourceId,
+  });
+
+  return this.save();
 };
 
 // Prevent model redefinition

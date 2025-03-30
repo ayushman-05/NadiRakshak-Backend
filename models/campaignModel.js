@@ -21,11 +21,11 @@ const campaignSchema = new mongoose.Schema(
     },
     startDate: {
       type: Date,
-      required: [true, "Please provide a start date"]
+      required: [true, "Please provide a start date"],
     },
     endDate: {
       type: Date,
-      required: [true, "Please provide an end date"]
+      required: [true, "Please provide an end date"],
     },
     maxParticipants: {
       type: Number,
@@ -52,6 +52,11 @@ const campaignSchema = new mongoose.Schema(
           type: Object,
           default: {},
         },
+        // Track eligible participants (e.g., didn't leave right after joining)
+        eligible: {
+          type: Boolean,
+          default: true,
+        },
       },
     ],
     status: {
@@ -67,6 +72,11 @@ const campaignSchema = new mongoose.Schema(
     image: {
       type: String,
       default: "default-campaign.jpg",
+    },
+    // Track if rewards have been distributed
+    rewardsDistributed: {
+      type: Boolean,
+      default: false,
     },
   },
   {
