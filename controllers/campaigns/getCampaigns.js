@@ -103,6 +103,110 @@ const getAllCampaigns = async (req, res) => {
   }
 };
 
+// Get active and upcoming campaigns (with filters)
+const getActiveAndUpcomingCampaigns = async (req, res) => {
+  try {
+    // Build query - only include active and upcoming campaigns
+    let query = { status: { $in: ["active", "upcoming"] } };
+
+    // Filter by status if provided (but only allow active or upcoming)
+    if (req.query.status) {
+      if (req.query.status === "active" || req.query.status === "upcoming") {
+        query.status = req.query.status;
+      }
+    }
+
+    // Filter by category if provided
+    if (req.query.category) {
+      query.category = req.query.category;
+    }
+
+    // Filter by date range if provided
+    if (req.query.startAfter) {
+      query.startDate = { $gte: new Date(req.query.startAfter) };
+    }
+
+    if (req.query.endBefore) {
+      query.endDate = { ...query.endDate, $lte: new Date(req.query.endBefore) };
+    }
+
+    // Filter by available spots
+    if (req.query.hasAvailableSpots === "true") {
+      // This requires aggregation to compare virtual field
+      const campaigns = await Campaign.aggregate([
+        {
+          $match: query,
+        },
+        {
+          $addFields: {
+            participantsCount: { $size: "$participants" },
+          },
+        },
+        {
+          $match: {
+            $expr: { $lt: ["$participantsCount", "$maxParticipants"] },
+          },
+        },
+      ]);
+
+      // Add isParticipant field to each campaign
+      const enhancedCampaigns = campaigns.map((campaign) => {
+        // Check if the user is a participant in this campaign
+        const isParticipant =
+          req.user &&
+          campaign.participants.some(
+            (p) => p.user && p.user.toString() === req.user._id.toString()
+          );
+
+        return {
+          ...campaign,
+          isParticipant: isParticipant || false,
+        };
+      });
+
+      return res.status(200).json({
+        status: "success",
+        results: enhancedCampaigns.length,
+        data: {
+          campaigns: enhancedCampaigns,
+        },
+      });
+    }
+
+    // Regular query without the available spots filter
+    const campaigns = await Campaign.find(query);
+
+    // Add isParticipant field to each campaign
+    const enhancedCampaigns = campaigns.map((campaign) => {
+      // Check if the user is a participant in this campaign
+      const isParticipant =
+        req.user &&
+        campaign.participants.some(
+          (p) => p.user && p.user.toString() === req.user._id.toString()
+        );
+
+      // Create a new object with the campaign data and isParticipant flag
+      return {
+        ...campaign.toObject(),
+        isParticipant: isParticipant || false,
+      };
+    });
+
+    res.status(200).json({
+      status: "success",
+      results: enhancedCampaigns.length,
+      data: {
+        campaigns: enhancedCampaigns,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+};
+
 // Get campaign by ID
 const getCampaign = async (req, res) => {
   try {
@@ -212,6 +316,7 @@ const getCampaignParticipants = async (req, res) => {
 module.exports = {
   getCampaign,
   getAllCampaigns,
+  getActiveAndUpcomingCampaigns,
   getUserCampaigns,
   getCampaignParticipants,
 };

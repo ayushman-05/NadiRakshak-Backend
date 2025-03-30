@@ -16,6 +16,7 @@ const {
 } = require("../controllers/campaigns/creatorCampaign");
 const {
   getAllCampaigns,
+  getActiveAndUpcomingCampaigns,
   getCampaign,
   getUserCampaigns,
   getCampaignParticipants,
@@ -34,11 +35,14 @@ const { uploadCampaignImage } = require("../middleware/fileUploadMiddleware");
 router.route("/search").get(protect, searchCampaigns);
 router.route("/advanced-search").get(protect, advancedSearchCampaigns);
 
-// Updated routes with image upload middleware
-router
-  .route("/")
-  .get(protect, getAllCampaigns)
-  .post(protect, uploadCampaignImage, createCampaign);
+// Route for active and upcoming campaigns (main route)
+router.route("/").get(protect, getActiveAndUpcomingCampaigns);
+
+// New route for all campaigns (including finished ones)
+router.route("/all").get(protect, getAllCampaigns);
+
+// Post route for creating new campaigns
+router.route("/").post(protect, uploadCampaignImage, createCampaign);
 
 router.route("/my-campaigns").get(protect, getUserCampaigns);
 router.route("/update-statuses").patch(updateCampaignStatuses);
