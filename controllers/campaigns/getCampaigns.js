@@ -1,5 +1,6 @@
 const Campaign = require("../../models/campaignModel");
-const User= require("../../models/userModal");;
+const User = require("../../models/userModal");
+
 // Get all campaigns (with filters)
 const getAllCampaigns = async (req, res) => {
   try {
@@ -44,11 +45,26 @@ const getAllCampaigns = async (req, res) => {
         },
       ]);
 
+      // Add isParticipant field to each campaign
+      const enhancedCampaigns = campaigns.map((campaign) => {
+        // Check if the user is a participant in this campaign
+        const isParticipant =
+          req.user &&
+          campaign.participants.some(
+            (p) => p.user && p.user.toString() === req.user._id.toString()
+          );
+
+        return {
+          ...campaign,
+          isParticipant: isParticipant || false,
+        };
+      });
+
       return res.status(200).json({
         status: "success",
-        results: campaigns.length,
+        results: enhancedCampaigns.length,
         data: {
-          campaigns,
+          campaigns: enhancedCampaigns,
         },
       });
     }
@@ -56,11 +72,27 @@ const getAllCampaigns = async (req, res) => {
     // Regular query without the available spots filter
     const campaigns = await Campaign.find(query);
 
+    // Add isParticipant field to each campaign
+    const enhancedCampaigns = campaigns.map((campaign) => {
+      // Check if the user is a participant in this campaign
+      const isParticipant =
+        req.user &&
+        campaign.participants.some(
+          (p) => p.user && p.user.toString() === req.user._id.toString()
+        );
+
+      // Create a new object with the campaign data and isParticipant flag
+      return {
+        ...campaign.toObject(),
+        isParticipant: isParticipant || false,
+      };
+    });
+
     res.status(200).json({
       status: "success",
-      results: campaigns.length,
+      results: enhancedCampaigns.length,
       data: {
-        campaigns,
+        campaigns: enhancedCampaigns,
       },
     });
   } catch (error) {
@@ -103,7 +135,7 @@ const getCampaign = async (req, res) => {
       data: {
         campaign,
         isCreator,
-        isParticipant
+        isParticipant,
       },
     });
   } catch (error) {
@@ -181,7 +213,5 @@ module.exports = {
   getCampaign,
   getAllCampaigns,
   getUserCampaigns,
-  getCampaignParticipants
+  getCampaignParticipants,
 };
-
-
