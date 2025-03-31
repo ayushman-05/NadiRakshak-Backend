@@ -35,7 +35,6 @@ router
     storeController.deleteStoreItem
   );
 
-
 // Order routes
 router
   .route("/orders")
