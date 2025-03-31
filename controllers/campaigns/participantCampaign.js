@@ -13,7 +13,7 @@ const joinCampaign = async (req, res) => {
 
     try {
       // Sanitize input data
-      const { additionalInfo } = req.body;
+      //const { additionalInfo } = req.body;
 
       // Find campaign
       const campaign = await Campaign.findById(req.params.id).session(session);
@@ -45,8 +45,8 @@ const joinCampaign = async (req, res) => {
       campaign.participants.push({
         user: req.user._id,
         joinedAt: new Date(),
-        additionalInfo,
-        eligible: true,
+        //additionalInfo,
+        //eligible: true,
       });
 
       await campaign.save({ session });
@@ -108,18 +108,19 @@ const leaveCampaign = async (req, res) => {
       if (participantIndex === -1) {
         throw new AppError("You are not a participant in this campaign", 400);
       }
+      campaign.participants.splice(participantIndex, 1);
 
       // Calculate time since joining
-      const joinedAt = campaign.participants[participantIndex].joinedAt;
-      const now = new Date();
-      const timeElapsed = now - joinedAt; // in milliseconds
-      const hoursSinceJoining = timeElapsed / (1000 * 60 * 60);
+      //const joinedAt = campaign.participants[participantIndex].joinedAt;
+      //const now = new Date();
+      //const timeElapsed = now - joinedAt; // in milliseconds
+      //const hoursSinceJoining = timeElapsed / (1000 * 60 * 60);
 
       // If they leave within 24 hours of joining, mark them as ineligible for rewards
       // This prevents abuse (joining and immediately leaving to farm points)
-      if (hoursSinceJoining < 24) {
-        campaign.participants[participantIndex].eligible = false;
-      }
+      // if (hoursSinceJoining < 24) {
+      //   campaign.participants[participantIndex].eligible = false;
+      // }
 
       // We won't remove them from participants, just mark them as left for reward tracking purposes
       await campaign.save({ session });
