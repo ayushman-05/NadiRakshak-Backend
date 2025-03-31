@@ -56,7 +56,7 @@ const submitReport = async (req, res) => {
       session.endSession();
       return res.status(400).json({
         message:
-          "You have already submitted a report within 100 meters in the last 24 hours",
+          "You have already submitted a report within 100 meters",
       });
     }
 
@@ -142,7 +142,7 @@ const updateReportStatus = async (req, res) => {
       return res.status(404).json({ message: "Report not found" });
     }
 
-    // Only award approval points when switching to Resolved and not already rewarded
+    // Only award approval points when switching to Accepted and not already rewarded
     let pointsAwarded = 0;
     if (status === "Accepted" && !report.rewards.approvalRewarded) {
       const user = await User.findById(report.userId).session(session);

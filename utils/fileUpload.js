@@ -94,4 +94,3 @@ const deleteFileFromFirebase = async (fileUrl) => {
 };
 
 module.exports = { uploadFileToFirebase, deleteFileFromFirebase };
-//module.exports = { uploadFileToFirebase };
