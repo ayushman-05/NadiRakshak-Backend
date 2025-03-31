@@ -13,7 +13,6 @@ router.get("/", newsController.getNews);
 router.post(
   "/update",
   protect,
-  restrictToAdmin,
   newsController.fetchAndUpdateNews
 );
 

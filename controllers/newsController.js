@@ -3,7 +3,7 @@ const News = require("../models/newsModel");
 const axios = require("axios");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
-
+const mongoose=require("mongoose");
 // Helper function to categorize news
 const categorizeNews = (title, description) => {
   const pollutionKeywords = [
@@ -36,17 +36,15 @@ exports.fetchAndUpdateNews = catchAsync(async (req, res, next) => {
   // NewsAPI parameters
   const params = {
     apiKey: process.env.NEWS_API_KEY,
-    q: "(water OR river) AND (pollution OR conservation OR cleanup OR government OR scheme OR project)",
+   
     language: "en",
     sortBy: "publishedAt",
     pageSize: 20,
   };
-
+ let q= "(water OR river) AND (pollution OR conservation OR cleanup OR government OR scheme OR project)";
   try {
     // Fetch news from NewsAPI
-    const response = await axios.get("https://newsapi.org/v2/everything", {
-      params,
-    });
+    const response = await axios.get(`https://newsapi.org/v2/everything?q=${q}&apiKey=${process.env.NEWS_API_KEY}` );
 
     if (!response.data || !response.data.articles) {
       return next(new AppError("Failed to fetch news from API", 500));
