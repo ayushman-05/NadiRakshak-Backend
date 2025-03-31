@@ -4,6 +4,7 @@ const storeController = require("../controllers/storeController");
 const orderController = require("../controllers/orderController");
 const multer = require("multer");
 const { protect } = require("../middleware/authMiddleware");
+const { restrictToAdmin } = require("../middleware/adminMiddleware");
 
 // Configure multer for image upload
 const upload = multer({
@@ -23,8 +24,7 @@ const upload = multer({
 // Store item routes
 router
   .route("/items")
-  .get(storeController.getAllStoreItems)
-  .post(protect, upload.single("image"), storeController.createStoreItem);
+  .get(storeController.getAllStoreItems);
 
 router
   .route("/items/:id")
@@ -32,9 +32,9 @@ router
   .patch(protect, upload.single("image"), storeController.updateStoreItem)
   .delete(
     protect,
-
     storeController.deleteStoreItem
   );
+
 
 // Order routes
 router
@@ -44,19 +44,31 @@ router
 
 router.route("/orders/:id").get(protect, orderController.getOrder);
 
-// Admin-only routes
-router.route("/admin/orders").get(
+router.get(
+  "/orders/status/:status",
   protect,
-
+  orderController.getOrdersByStatus
+);
+// Admin-only routes
+router
+  .route("/admin/items")
+  .post(
+    protect,
+    restrictToAdmin,
+    upload.single("image"),
+    storeController.createStoreItem
+  );
+router.route("/admin/orders").get(
+  protect,restrictToAdmin,
   orderController.getAllOrders
 );
 
 router
   .route("/admin/orders/:id/status")
-  .patch(protect, orderController.updateOrderStatus);
+  .patch(protect, restrictToAdmin, orderController.updateOrderStatus);
 
 router
   .route("/admin/orders/:id/tracking")
-  .patch(protect, orderController.addTrackingInfo);
+  .patch(protect, restrictToAdmin, orderController.addTrackingInfo);
 
 module.exports = router;

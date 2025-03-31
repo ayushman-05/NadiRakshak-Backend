@@ -46,7 +46,7 @@ const temporarySignupSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["Inspection", "Public"],
+    enum: ["Inspection", "Public","Admin"],
   },
   otp: {
     type: String,

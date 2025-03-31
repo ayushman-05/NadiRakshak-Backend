@@ -9,7 +9,7 @@ const {
 
 const initiateSignup = async (req, res) => {
   try {
-    const { name, email, password, age, city, state, mobileNumber, role } =
+    const { name, email, password, age, city, state, mobileNumber,role } =
       req.body;
 
     // Check if user already exists in permanent Users collection
@@ -58,9 +58,9 @@ const initiateSignup = async (req, res) => {
   }
 };
 
-const resendOTP = async (req,res)=>{
+// const resendOTP = async (req,res)=>{
   
-}
+// }
 
 // Verify OTP and complete registration
 const verifyOTPAndRegister = async (req, res) => {

@@ -84,3 +84,11 @@ storeItemSchema.index(
 
 module.exports =
   mongoose.models.StoreItem || mongoose.model("StoreItem", storeItemSchema);
+// models/storeItemModel.js
+// Add this before module.exports
+storeItemSchema.pre('save', function(next) {
+  if (this.stockQuantity <= 0) {
+    this.isAvailable = false;
+  }
+  next();
+});

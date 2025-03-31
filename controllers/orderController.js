@@ -240,6 +240,59 @@ const getUserOrders = async (req, res) => {
   }
 };
 
+// Get orders by status
+const getOrdersByStatus = async (req, res) => {
+  try {
+    const { status } = req.params;
+    
+    // Validate status
+    const validStatuses = ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Invalid order status",
+      });
+    }
+    
+    // Build query
+    const query = {
+      user: req.user._id,
+      status: status,
+    };
+    
+    // Pagination
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const skip = (page - 1) * limit;
+    
+    const orders = await Order.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort("-createdAt")
+      .populate({
+        path: "items.item",
+        select: "name image category",
+      });
+    
+    const total = await Order.countDocuments(query);
+    
+    res.status(200).json({
+      status: "success",
+      results: orders.length,
+      total,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      data: {
+        orders,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+};
 // Get a specific order
 const getOrder = async (req, res) => {
   try {
@@ -511,6 +564,7 @@ const addTrackingInfo = async (req, res) => {
 module.exports = {
   createOrder,
   getUserOrders,
+  getOrdersByStatus,
   getOrder,
   updateOrderStatus,
   getAllOrders,
