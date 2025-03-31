@@ -47,7 +47,7 @@ const verifyImage = async (imageBuffer, imageUrl = null) => {
       );
 
       // Check the SightEngine response
-      console.log(response.data);
+      //console.log(response.data);
       if (response.data && response.data.genai) {
         // If probability of being AI-generated is high, reject the image
         if (response.data.genai.prob > 0.7) {

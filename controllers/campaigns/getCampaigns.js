@@ -209,7 +209,9 @@ const getActiveAndUpcomingCampaigns = async (req, res) => {
 
 // Get campaign by ID
 const getCampaign = async (req, res) => {
+  console.log(req.params.id);
   try {
+    
     const campaign = await Campaign.findById(req.params.id)
       .populate("creator", "name email")
       .populate("participants.user", "name");
@@ -220,6 +222,7 @@ const getCampaign = async (req, res) => {
         message: "Campaign not found",
       });
     }
+    
 
     // Check if the user is the creator to determine data visibility
     const isCreator = req.user && campaign.creator._id.equals(req.user._id);
@@ -244,7 +247,7 @@ const getCampaign = async (req, res) => {
     });
     
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     res.status(400).json({
       status: "fail",
       message: error.message,
