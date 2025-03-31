@@ -12,7 +12,6 @@ router.get("/", newsController.getNews);
 // For cron job access, this should likely be protected by an API key or some form of authentication
 router.post(
   "/update",
-  protect,
   newsController.fetchAndUpdateNews
 );
 
