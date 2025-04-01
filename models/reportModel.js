@@ -37,7 +37,7 @@ const reportSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Pending", "InReview", "Resolved", "Rejected"],
+      enum: ["Pending", "InReview", "Accepted", "Rejected"],
       default: "Pending",
     },
     // Track reward distribution

@@ -44,7 +44,7 @@ exports.fetchAndUpdateNews = catchAsync(async (req, res, next) => {
  let q= "(water OR river) AND (pollution OR conservation OR cleanup OR government OR scheme OR project)";
   try {
     // Fetch news from NewsAPI
-    const response = await axios.get(`https://newsapi.org/v2/everything?q=${q}&apiKey=${process.env.NEWS_API_KEY}` );
+    const response = await axios.get(`https://newsapi.org/v2/everything?q=${q}&apiKey=${process.env.NEWS_API_KEY}&language=en&pageSize=10` );
 
     if (!response.data || !response.data.articles) {
       return next(new AppError("Failed to fetch news from API", 500));
@@ -110,7 +110,7 @@ exports.getNews = catchAsync(async (req, res, next) => {
     filter.category = category;
   }
 
-  const news = await News.find(filter).sort({ publishedAt: -1 }).limit(20);
+  const news = await News.find(filter).sort({ publishedAt: -1 }).limit(10);
 
   res.status(200).json({
     status: "success",

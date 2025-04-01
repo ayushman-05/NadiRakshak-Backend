@@ -26,6 +26,11 @@ const getAllCampaigns = async (req, res) => {
       query.endDate = { ...query.endDate, $lte: new Date(req.query.endBefore) };
     }
 
+    // Filter by isGovernment if provided
+    if (req.query.isGovernment !== undefined) {
+      query.isGovernment = req.query.isGovernment === "true";
+    }
+
     // Filter by available spots
     if (req.query.hasAvailableSpots === "true") {
       // This requires aggregation to compare virtual field
@@ -130,6 +135,11 @@ const getActiveAndUpcomingCampaigns = async (req, res) => {
       query.endDate = { ...query.endDate, $lte: new Date(req.query.endBefore) };
     }
 
+    // Filter by isGovernment if provided
+    if (req.query.isGovernment !== undefined) {
+      query.isGovernment = req.query.isGovernment === "true";
+    }
+
     // Filter by available spots
     if (req.query.hasAvailableSpots === "true") {
       // This requires aggregation to compare virtual field
@@ -209,9 +219,7 @@ const getActiveAndUpcomingCampaigns = async (req, res) => {
 
 // Get campaign by ID
 const getCampaign = async (req, res) => {
-  console.log(req.params.id);
   try {
-    
     const campaign = await Campaign.findById(req.params.id)
       .populate("creator", "name email")
       .populate("participants.user", "name");
@@ -222,13 +230,13 @@ const getCampaign = async (req, res) => {
         message: "Campaign not found",
       });
     }
-    
 
     // Check if the user is the creator to determine data visibility
     const isCreator = req.user && campaign.creator._id.equals(req.user._id);
     const isParticipant =
       req.user &&
       campaign.participants.some((p) => p.user._id.equals(req.user._id));
+
     // If not creator, remove detailed participant information
     if (!isCreator) {
       campaign.participants = campaign.participants.map((p) => ({
@@ -245,9 +253,7 @@ const getCampaign = async (req, res) => {
         isParticipant,
       },
     });
-    
   } catch (error) {
-    //console.log(error);
     res.status(400).json({
       status: "fail",
       message: error.message,
@@ -308,6 +314,7 @@ const getCampaignParticipants = async (req, res) => {
       status: "success",
       data: {
         participants: campaign.participants,
+        isGovernment: campaign.isGovernment,
       },
     });
   } catch (error) {

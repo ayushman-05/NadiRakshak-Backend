@@ -49,6 +49,11 @@ const searchCampaigns = async (req, res) => {
       };
     }
 
+    // Add filter for isGovernment
+    if (req.query.isGovernment !== undefined) {
+      searchQuery.isGovernment = req.query.isGovernment === "true";
+    }
+
     // Execute search query
     const campaigns = await Campaign.find(searchQuery);
 
@@ -139,6 +144,11 @@ const advancedSearchCampaigns = async (req, res) => {
         ...searchQuery.endDate,
         $lte: new Date(req.query.endBefore),
       };
+    }
+
+    // Filter by isGovernment
+    if (req.query.isGovernment !== undefined) {
+      searchQuery.isGovernment = req.query.isGovernment === "true";
     }
 
     // Build sort options

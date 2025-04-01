@@ -31,7 +31,9 @@ const getReports = async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .populate("userId", "name email");
+      .populate("userId", "name email")
+
+
 
     const total = await Report.countDocuments(filter);
 
@@ -49,6 +51,50 @@ const getReports = async (req, res) => {
   }
 };
 
+const getUserReports= async(req,res)=>{
+  try {
+    const filter = {};
+
+    // Apply filters if provided
+    if (req.query.severity) {
+      filter.severity = req.query.severity;
+    }
+
+    if (req.query.status) {
+      filter.status = req.query.status;
+    }
+
+    // Date range filter
+    if (req.query.fromDate && req.query.toDate) {
+      filter.createdAt = {
+        $gte: new Date(req.query.fromDate),
+        $lte: new Date(req.query.toDate),
+      };
+    }
+
+    // Pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const reports = await Report.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("userId", "name email");
+
+    reports = reports.map((report) => report.userId === user._id);
+
+    //const total = await Report.countDocuments(filter);
+
+    res.status(200).json({
+      reports
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+      
+}
 // Get reports within a specified area (for map view)
 const getReportsInArea = async (req, res) => {
   try {
@@ -169,4 +215,4 @@ const getReportStats = async (req, res) => {
   }
 };
 
-module.exports = { getReports, getReportsInArea, getReportStats };
+module.exports = { getReports, getReportsInArea, getReportStats,getUserReports };

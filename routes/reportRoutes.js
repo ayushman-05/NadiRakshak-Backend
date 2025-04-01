@@ -10,11 +10,12 @@ const {
   updateDraft,
   deleteDraft,
 } = require("../controllers/reports/draftManagementController");
-const { submitReport } = require("../controllers/reports/reportController");
+const { submitReport,updateReportStatus } = require("../controllers/reports/reportController");
 const {
   getReports,
   getReportsInArea,
   getReportStats,
+  getUserReports
 } = require("../controllers/reports/reportQueryController");
 
 // Draft routes
@@ -27,7 +28,9 @@ router.delete("/drafts/:id", protect, deleteDraft);
 // Final report submission
 router.post("/submit/:draftId", protect, submitReport);
 
+router.post("/update-report/:id",protect,updateReportStatus);
 // Report queries
+router.get("/my-reports",protect,getUserReports);
 router.get("/", protect, getReports);
 router.get("/area", protect, getReportsInArea);
 router.get("/stats", protect, getReportStats);

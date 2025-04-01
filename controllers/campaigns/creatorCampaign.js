@@ -53,11 +53,17 @@ const createCampaign = async (req, res) => {
       }
     }
 
-    // Create new campaign with image URL
+    // Set isGovernment field based on user input or default to false
+    const isGovernment =
+      sanitizedData.isGovernment === true ||
+      sanitizedData.isGovernment === "true";
+
+    // Create new campaign with image URL and isGovernment flag
     const campaign = await Campaign.create({
       ...sanitizedData,
       creator: req.user._id,
       image: imageUrl,
+      isGovernment: isGovernment,
     });
 
     res.status(201).json({
@@ -77,7 +83,6 @@ const createCampaign = async (req, res) => {
 // Update campaign
 const updateCampaign = async (req, res) => {
   try {
-    //console.log(req.params);
     const campaign = await Campaign.findById(req.params.id);
 
     if (!campaign) {
@@ -105,6 +110,13 @@ const updateCampaign = async (req, res) => {
 
     // Sanitize input data
     const sanitizedData = sanitizeData(req.body);
+
+    // Parse isGovernment field if present
+    if (sanitizedData.isGovernment !== undefined) {
+      sanitizedData.isGovernment =
+        sanitizedData.isGovernment === true ||
+        sanitizedData.isGovernment === "true";
+    }
 
     // Prevent reducing maxParticipants below current participant count
     if (
