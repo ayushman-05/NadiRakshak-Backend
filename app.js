@@ -8,6 +8,8 @@ const campaignRoutes = require("./routes/campaignRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const storeRouter = require("./routes/storeRoutes");
 const newsRoutes = require("./routes/newsRoutes");
+const riverRoutes = require("./routes/riverRoutes");
+
 const app = express();
 
 app.use(cors());
@@ -25,6 +27,7 @@ app.use("/api/v1/campaigns", campaignRoutes);
 app.use("/api/v1/reports",reportRoutes);
 app.use("/api/v1/store", storeRouter);
 app.use("/api/v1/news", newsRoutes);
+app.use("/api/v1/rivers", riverRoutes);
 //for fun
 app.get("/", (req, res) => {
   res.send("Hello from server!!");
