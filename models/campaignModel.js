@@ -78,6 +78,11 @@ const campaignSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    // Add isGovernment field
+    isGovernment: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

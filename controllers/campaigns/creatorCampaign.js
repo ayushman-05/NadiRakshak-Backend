@@ -53,10 +53,18 @@ const createCampaign = async (req, res) => {
       }
     }
 
-    // Set isGovernment field based on user input or default to false
-    const isGovernment =
-      sanitizedData.isGovernment === true ||
-      sanitizedData.isGovernment === "true";
+    // Set isGovernment field based on user role
+    // If user is admin, set isGovernment to true regardless of input
+    // Otherwise, use user input or default to false
+    let isGovernment = false;
+
+    if (req.user.role === "admin") {
+      isGovernment = true;
+    } else {
+      isGovernment =
+        sanitizedData.isGovernment === true ||
+        sanitizedData.isGovernment === "true";
+    }
 
     // Create new campaign with image URL and isGovernment flag
     const campaign = await Campaign.create({
@@ -111,8 +119,10 @@ const updateCampaign = async (req, res) => {
     // Sanitize input data
     const sanitizedData = sanitizeData(req.body);
 
-    // Parse isGovernment field if present
-    if (sanitizedData.isGovernment !== undefined) {
+    // Handle isGovernment field based on user role
+    if (req.user.role === "admin") {
+      sanitizedData.isGovernment = true;
+    } else if (sanitizedData.isGovernment !== undefined) {
       sanitizedData.isGovernment =
         sanitizedData.isGovernment === true ||
         sanitizedData.isGovernment === "true";
