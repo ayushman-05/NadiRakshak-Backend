@@ -1,0 +1,452 @@
+{
+  "rivers": [
+    {
+      "name": "Ganga",
+      "stations": [
+        {
+          "stationCode": "1146",
+          "name": "RIVER GANGA AT BITHOOR (KANPUR)",
+          "stateName": "UTTAR PRADESH",
+          "data": [
+            {
+              "year": "2023",
+              "Temperature (°C)": { "min": 14.0, "max": 31.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 6.2, "max": 11.2 },
+              "pH": { "min": 7.8, "max": 8.5 },
+              "Conductivity (µmhos/cm)": { "min": 224, "max": 356 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 3.0, "max": 11.6 },
+              "Nitrate (mg/L)": { "min": 0.0, "max": 0.0 },
+              "Faecal Coliform (MPN/100ml)": { "min": 1700, "max": 2700 },
+              "Total Coliform (MPN/100ml)": { "min": 3100, "max": 4300 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 2, "max": 45 }
+            },
+            {
+              "year": "2022",
+              "Temperature (°C)": { "min": 16, "max": 31 },
+              "Dissolved Oxygen (mg/L)": { "min": 6.3, "max": 11.2 },
+              "pH": { "min": 7.98, "max": 8.51 },
+              "Conductivity (µmhos/cm)": { "min": 184, "max": 380 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 3, "max": 5.2 },
+              "Nitrate (mg/L)": { "min": null, "max": null },
+              "Faecal Coliform (MPN/100ml)": { "min": 1100, "max": 4000 },
+              "Total Coliform (MPN/100ml)": { "min": 2700, "max": 6300 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 20, "max": 48 }
+            },
+            {
+              "year": "2021",
+              "Temperature (°C)": { "min": 15.0, "max": 32.5 },
+              "Dissolved Oxygen (mg/L)": { "min": 6.2, "max": 11.5 },
+              "pH": { "min": 8.2, "max": 8.5 },
+              "Conductivity (µmhos/cm)": { "min": 208, "max": 296 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 3.0, "max": 3.3 },
+              "Nitrate (mg/L)": { "min": null, "max": null },
+              "Faecal Coliform (MPN/100ml)": { "min": 1100, "max": 2500 },
+              "Total Coliform (MPN/100ml)": { "min": 2600, "max": 4600 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 2, "max": 45 }
+            }
+          ]
+        },
+        {
+          "stationCode": "1049",
+          "name": "RIVER GANGA AT PRAYAGRAJ D/S (SANGAM)",
+          "stateName": "UTTAR PRADESH",
+          "data": [
+            {
+              "year": "2023",
+              "Temperature (°C)": { "min": 20.4, "max": 30.8 },
+              "Dissolved Oxygen (mg/L)": { "min": 7.1, "max": 9.1 },
+              "pH": { "min": 7.8, "max": 8.4 },
+              "Conductivity (µmhos/cm)": { "min": 258, "max": 292 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 2.6, "max": 3.0 },
+              "Nitrate (mg/L)": { "min": 0.53, "max": 0.73 },
+              "Faecal Coliform (MPN/100ml)": { "min": 680, "max": 930 },
+              "Total Coliform (MPN/100ml)": { "min": 2200, "max": 2700 },
+              "Faecal Streptococci (MPN/100ml)": { "min": null, "max": null }
+            },
+            {
+              "year": "2022",
+              "Temperature (°C)": { "min": 18.9, "max": 31.8 },
+              "Dissolved Oxygen (mg/L)": { "min": 6, "max": 9.2 },
+              "pH": { "min": 7.43, "max": 8.39 },
+              "Conductivity (µmhos/cm)": { "min": 237, "max": 279 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 2.6, "max": 3 },
+              "Nitrate (mg/L)": { "min": 0.6, "max": 0.67 },
+              "Faecal Coliform (MPN/100ml)": { "min": 610, "max": 930 },
+              "Total Coliform (MPN/100ml)": { "min": 2400, "max": 2700 },
+              "Faecal Streptococci (MPN/100ml)": { "min": null, "max": null }
+            },
+            {
+              "year": "2021",
+              "Temperature (°C)": { "min": 18.6, "max": 30.3 },
+              "Dissolved Oxygen (mg/L)": { "min": 7.2, "max": 9.9 },
+              "pH": { "min": 7.6, "max": 8.5 },
+              "Conductivity (µmhos/cm)": { "min": 248, "max": 384 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 2.0, "max": 2.9 },
+              "Nitrate (mg/L)": { "min": 0.56, "max": 0.66 },
+              "Faecal Coliform (MPN/100ml)": { "min": 680, "max": 1400 },
+              "Total Coliform (MPN/100ml)": { "min": 1700, "max": 2700 },
+              "Faecal Streptococci (MPN/100ml)": { "min": null, "max": null }
+            }
+          ]
+        },
+        {
+          "stationCode": "10115",
+          "name": "RIVER GANGA AT GULABI GHAT, PATNA",
+          "stateName": "BIHAR",
+          "data": [
+            {
+              "year": "2023",
+              "Temperature (°C)": { "min": 13.0, "max": 31.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 6.3, "max": 9.0 },
+              "pH": { "min": 7.2, "max": 8.4 },
+              "Conductivity (µmhos/cm)": { "min": 251, "max": 398 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.2, "max": 2.5 },
+              "Nitrate (mg/L)": { "min": 0.3, "max": 0.3 },
+              "Faecal Coliform (MPN/100ml)": { "min": 13000, "max": 92000 },
+              "Total Coliform (MPN/100ml)": { "min": 22000, "max": 160000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 2, "max": 35000 }
+            },
+            {
+              "year": "2022",
+              "Temperature (°C)": { "min": 14, "max": 35 },
+              "Dissolved Oxygen (mg/L)": { "min": 5.5, "max": 9.3 },
+              "pH": { "min": 7.08, "max": 8.34 },
+              "Conductivity (µmhos/cm)": { "min": 199, "max": 521 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.3, "max": 3 },
+              "Nitrate (mg/L)": { "min": "BDL", "max": 0.38 },
+              "Faecal Coliform (MPN/100ml)": { "min": 1300, "max": 350000 },
+              "Total Coliform (MPN/100ml)": { "min": 2400, "max": 920000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 93, "max": 9200 }
+            },
+            {
+              "year": "2021",
+              "Temperature (°C)": { "min": 16.0, "max": 32.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 4.4, "max": 9.3 },
+              "pH": { "min": 7.1, "max": 8.2 },
+              "Conductivity (µmhos/cm)": { "min": 201, "max": 468 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.4, "max": 3.2 },
+              "Nitrate (mg/L)": { "min": 0.3, "max": 0.87 },
+              "Faecal Coliform (MPN/100ml)": { "min": 35000, "max": 160000 },
+              "Total Coliform (MPN/100ml)": { "min": 54000, "max": 160000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 170, "max": 9200 }
+            }
+          ]
+        },
+        {
+          "stationCode": "4398",
+          "name": "RIVER GANGA AT WATER INTAKE POINT, BHAGALPUR",
+          "stateName": "BIHAR",
+          "data": [
+            {
+              "year": "2023",
+              "Temperature (°C)": { "min": 12.0, "max": 29.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 5.5, "max": 9.7 },
+              "pH": { "min": 7.2, "max": 8.1 },
+              "Conductivity (µmhos/cm)": { "min": 212, "max": 1240 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.0, "max": 2.7 },
+              "Nitrate (mg/L)": { "min": 0.3, "max": 0.31 },
+              "Faecal Coliform (MPN/100ml)": { "min": 450, "max": 54000 },
+              "Total Coliform (MPN/100ml)": { "min": 1300, "max": 92000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 2, "max": 1700 }
+            },
+            {
+              "year": "2022",
+              "Temperature (°C)": { "min": 10, "max": 33 },
+              "Dissolved Oxygen (mg/L)": { "min": 5.5, "max": 12.5 },
+              "pH": { "min": 7.1, "max": 8.5 },
+              "Conductivity (µmhos/cm)": { "min": 197, "max": 967 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.1, "max": 3 },
+              "Nitrate (mg/L)": { "min": "BDL", "max": 0.94 },
+              "Faecal Coliform (MPN/100ml)": { "min": 790, "max": 350000 },
+              "Total Coliform (MPN/100ml)": { "min": 1700, "max": 540000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 2, "max": 1300 }
+            },
+            {
+              "year": "2021",
+              "Temperature (°C)": { "min": 15.0, "max": 30.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 5.8, "max": 9.8 },
+              "pH": { "min": 7.3, "max": 8.6 },
+              "Conductivity (µmhos/cm)": { "min": 196, "max": 1080 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.6, "max": 3.2 },
+              "Nitrate (mg/L)": { "min": 0.3, "max": 1.2 },
+              "Faecal Coliform (MPN/100ml)": { "min": 6300, "max": 160000 },
+              "Total Coliform (MPN/100ml)": { "min": 6300, "max": 160000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 20, "max": 5400 }
+            }
+          ]
+        },
+        {
+          "stationCode": "1471",
+          "name": "RIVER GANGA AT HOWRAH-SHIVPUR",
+          "stateName": "WEST BENGAL",
+          "data": [
+            {
+              "year": "2023",
+              "Temperature (°C)": { "min": 20.0, "max": 34.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 5.0, "max": 7.8 },
+              "pH": { "min": 6.8, "max": 7.9 },
+              "Conductivity (µmhos/cm)": { "min": 222, "max": 483 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 2.4, "max": 3.6 },
+              "Nitrate (mg/L)": { "min": 0.35, "max": 1.56 },
+              "Faecal Coliform (MPN/100ml)": { "min": 31000, "max": 79000 },
+              "Total Coliform (MPN/100ml)": { "min": 70000, "max": 140000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 170, "max": 490 }
+            },
+            {
+              "year": "2022",
+              "Temperature (°C)": { "min": 21, "max": 33 },
+              "Dissolved Oxygen (mg/L)": { "min": 5.2, "max": 7.7 },
+              "pH": { "min": 7.02, "max": 7.96 },
+              "Conductivity (µmhos/cm)": { "min": 232, "max": 467 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 2.1, "max": 4 },
+              "Nitrate (mg/L)": { "min": 0.34, "max": 2.21 },
+              "Faecal Coliform (MPN/100ml)": { "min": 23000, "max": 79000 },
+              "Total Coliform (MPN/100ml)": { "min": 43000, "max": 140000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 130, "max": 790 }
+            },
+            {
+              "year": "2021",
+              "Temperature (°C)": { "min": 21.0, "max": 33.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 4.0, "max": 7.8 },
+              "pH": { "min": 7.0, "max": 8.0 },
+              "Conductivity (µmhos/cm)": { "min": 183, "max": 455 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.7, "max": 3.9 },
+              "Nitrate (mg/L)": { "min": 0.32, "max": 1.3 },
+              "Faecal Coliform (MPN/100ml)": { "min": 13000, "max": 79000 },
+              "Total Coliform (MPN/100ml)": { "min": 49000, "max": 220000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 68, "max": 270 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Beas",
+      "stations": [
+        {
+          "stationCode": "1001",
+          "name": "RIVER BEAS AT U/S MANALI",
+          "stateName": "HIMACHAL PRADESH",
+          "data": [
+            {
+              "year": "2023",
+              "Temperature (°C)": { "min": 2.0, "max": 24.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 7.8, "max": 9.2 },
+              "pH": { "min": 7.2, "max": 8.2 },
+              "Conductivity (µmhos/cm)": { "min": 68, "max": 380 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.0, "max": 2.8 },
+              "Nitrate (mg/L)": { "min": 0.32, "max": 1.15 },
+              "Faecal Coliform (MPN/100ml)": { "min": 2, "max": 170 },
+              "Total Coliform (MPN/100ml)": { "min": 63, "max": 540 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 2, "max": 2 }
+            },
+            {
+              "year": "2022",
+              "Temperature (°C)": { "min": 2, "max": 17 },
+              "Dissolved Oxygen (mg/L)": { "min": 7.2, "max": 9.9 },
+              "pH": { "min": 7.31, "max": 8.19 },
+              "Conductivity (µmhos/cm)": { "min": 74, "max": 403 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": null, "max": null },
+              "Nitrate (mg/L)": { "min": 0.32, "max": 1.22 },
+              "Faecal Coliform (MPN/100ml)": { "min": 11, "max": 110 },
+              "Total Coliform (MPN/100ml)": { "min": 94, "max": 540 },
+              "Faecal Streptococci (MPN/100ml)": { "min": null, "max": null }
+            },
+            {
+              "year": "2021",
+              "Temperature (°C)": { "min": 4.0, "max": 14.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 7.9, "max": 9.7 },
+              "pH": { "min": 7.2, "max": 8.0 },
+              "Conductivity (µmhos/cm)": { "min": 80, "max": 270 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.0, "max": 1.0 },
+              "Nitrate (mg/L)": { "min": 0.3, "max": 0.72 },
+              "Faecal Coliform (MPN/100ml)": { "min": 2, "max": 110 },
+              "Total Coliform (MPN/100ml)": { "min": 25, "max": 540 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 2, "max": 2 }
+            }
+          ]
+        },
+        {
+          "stationCode": "2604",
+          "name": "RIVER BEAS AT D/S JAISINGHPUR",
+          "stateName": "HIMACHAL PRADESH",
+          "data": [
+            {
+              "year": "2023",
+              "Temperature (°C)": { "min": 13.0, "max": 22.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 8.6, "max": 9.4 },
+              "pH": { "min": 7.2, "max": 8.2 },
+              "Conductivity (µmhos/cm)": { "min": 115, "max": 362 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.0, "max": 1.0 },
+              "Nitrate (mg/L)": { "min": 1.2, "max": 4.83 },
+              "Faecal Coliform (MPN/100ml)": { "min": 2, "max": 68 },
+              "Total Coliform (MPN/100ml)": { "min": 110, "max": 16000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 2, "max": 2 }
+            },
+            {
+              "year": "2022",
+              "Temperature (°C)": { "min": 10, "max": 25 },
+              "Dissolved Oxygen (mg/L)": { "min": 7.8, "max": 9.1 },
+              "pH": { "min": 7.4, "max": 8.13 },
+              "Conductivity (µmhos/cm)": { "min": 146, "max": 348 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": null, "max": null },
+              "Nitrate (mg/L)": { "min": null, "max": 6.98 },
+              "Faecal Coliform (MPN/100ml)": { "min": 2, "max": 70 },
+              "Total Coliform (MPN/100ml)": { "min": 15, "max": 350 },
+              "Faecal Streptococci (MPN/100ml)": { "min": null, "max": null }
+            },
+            {
+              "year": "2021",
+              "Temperature (°C)": { "min": 16.0, "max": 26.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 8.4, "max": 9.5 },
+              "pH": { "min": 7.3, "max": 8.2 },
+              "Conductivity (µmhos/cm)": { "min": 118, "max": 392 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.0, "max": 1.0 },
+              "Nitrate (mg/L)": { "min": 0.4, "max": 3.1 },
+              "Faecal Coliform (MPN/100ml)": { "min": 2, "max": 2 },
+              "Total Coliform (MPN/100ml)": { "min": 27, "max": 39 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 2, "max": 2 }
+            }
+          ]
+        },
+        {
+          "stationCode": "1695",
+          "name": "RIVER BEAS D/S PATHANKOT, PUNJAB",
+          "stateName": "PUNJAB",
+          "data": [
+            {
+              "year": "2023",
+              "Temperature (°C)": { "min": 11.0, "max": 34.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 7.4, "max": 8.9 },
+              "pH": { "min": 7.5, "max": 8.3 },
+              "Conductivity (µmhos/cm)": { "min": 218, "max": 295 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.0, "max": 1.2 },
+              "Nitrate (mg/L)": { "min": 0.5, "max": 1.1 },
+              "Faecal Coliform (MPN/100ml)": { "min": 31, "max": 140 },
+              "Total Coliform (MPN/100ml)": { "min": 120, "max": 330 },
+              "Faecal Streptococci (MPN/100ml)": { "min": null, "max": null }
+            },
+            {
+              "year": "2022",
+              "Temperature (°C)": { "min": 12, "max": 40 },
+              "Dissolved Oxygen (mg/L)": { "min": 7.7, "max": 8.5 },
+              "pH": { "min": 7.8, "max": 8.4 },
+              "Conductivity (µmhos/cm)": { "min": 217, "max": 289 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.1, "max": 1.4 },
+              "Nitrate (mg/L)": { "min": 0.5, "max": 1.1 },
+              "Faecal Coliform (MPN/100ml)": { "min": 63, "max": 220 },
+              "Total Coliform (MPN/100ml)": { "min": 280, "max": 490 },
+              "Faecal Streptococci (MPN/100ml)": { "min": null, "max": null }
+            },
+            {
+              "year": "2021",
+              "Temperature (°C)": { "min": 11.0, "max": 38.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 6.8, "max": 8.1 },
+              "pH": { "min": 7.5, "max": 8.2 },
+              "Conductivity (µmhos/cm)": { "min": 200, "max": 302 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.1, "max": 1.7 },
+              "Nitrate (mg/L)": { "min": 0.5, "max": 1.0 },
+              "Faecal Coliform (MPN/100ml)": { "min": 40, "max": 130 },
+              "Total Coliform (MPN/100ml)": { "min": 140, "max": 470 },
+              "Faecal Streptococci (MPN/100ml)": { "min": null, "max": null }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Yamuna",
+      "stations": [
+        {
+          "stationCode": "1492",
+          "name": "RIVER YAMUNA AT YAMUNOTRI",
+          "stateName": "UTTARAKHAND",
+          "data": [
+            {
+              "year": "2023",
+              "Temperature (°C)": { "min": 4.0, "max": 4.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 11.2, "max": 11.2 },
+              "pH": { "min": 7.8, "max": 7.8 },
+              "Conductivity (µmhos/cm)": { "min": 31, "max": 31 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.0, "max": 1.0 },
+              "Nitrate (mg/L)": { "min": 0.32, "max": 0.32 },
+              "Faecal Coliform (MPN/100ml)": { "min": 2, "max": 2 },
+              "Total Coliform (MPN/100ml)": { "min": 2, "max": 2 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 2, "max": 2 }
+            },
+            {
+              "year": "2022",
+              "Temperature (°C)": { "min": 3, "max": 3 },
+              "Dissolved Oxygen (mg/L)": { "min": 10.4, "max": 10.4 },
+              "pH": { "min": 7.21, "max": 7.21 },
+              "Conductivity (µmhos/cm)": { "min": 62, "max": 62 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": null, "max": null },
+              "Nitrate (mg/L)": { "min": 0.32, "max": 0.32 },
+              "Faecal Coliform (MPN/100ml)": { "min": null, "max": null },
+              "Total Coliform (MPN/100ml)": { "min": null, "max": null },
+              "Faecal Streptococci (MPN/100ml)": { "min": null, "max": null }
+            },
+            {
+              "year": "2021",
+              "Temperature (°C)": { "min": 10.0, "max": 10.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 10.6, "max": 10.6 },
+              "pH": { "min": 7.2, "max": 7.2 },
+              "Conductivity (µmhos/cm)": { "min": 35, "max": 35 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 1.0, "max": 1.0 },
+              "Nitrate (mg/L)": { "min": 0.33, "max": 0.33 },
+              "Faecal Coliform (MPN/100ml)": { "min": 2, "max": 2 },
+              "Total Coliform (MPN/100ml)": { "min": 2, "max": 2 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 2, "max": 2 }
+            }
+          ]
+        },
+        {
+          "stationCode": "1126",
+          "name": "RIVER YAMUNA AT D/S OF AGRA, U.P.",
+          "stateName": "UTTAR PRADESH",
+          "data": [
+            {
+              "year": "2023",
+              "Temperature (°C)": { "min": 24.0, "max": 28.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 6.6, "max": 7.0 },
+              "pH": { "min": 6.7, "max": 7.5 },
+              "Conductivity (µmhos/cm)": { "min": 512, "max": 2045 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 7.2, "max": 15.6 },
+              "Nitrate (mg/L)": { "min": 0.0, "max": 0.0 },
+              "Faecal Coliform (MPN/100ml)": { "min": 6800, "max": 17000 },
+              "Total Coliform (MPN/100ml)": { "min": 11000, "max": 33000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": null, "max": null }
+            },
+            {
+              "year": "2022",
+              "Temperature (°C)": { "min": 20, "max": 31 },
+              "Dissolved Oxygen (mg/L)": { "min": 5.3, "max": 7.3 },
+              "pH": { "min": 6.7, "max": 7.9 },
+              "Conductivity (µmhos/cm)": { "min": 450, "max": 1586 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 8, "max": 12.8 },
+              "Nitrate (mg/L)": { "min": null, "max": null },
+              "Faecal Coliform (MPN/100ml)": { "min": 14000, "max": 50000 },
+              "Total Coliform (MPN/100ml)": { "min": 32000, "max": 80000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": null, "max": null }
+            },
+            {
+              "year": "2021",
+              "Temperature (°C)": { "min": 26.0, "max": 33.0 },
+              "Dissolved Oxygen (mg/L)": { "min": 1.0, "max": 6.8 },
+              "pH": { "min": 7.2, "max": 8.7 },
+              "Conductivity (µmhos/cm)": { "min": 926, "max": 1893 },
+              "Bio-Chemical Oxygen Demand (mg/L)": { "min": 7.2, "max": 34.0 },
+              "Nitrate (mg/L)": { "min": 0.3, "max": 2.58 },
+              "Faecal Coliform (MPN/100ml)": { "min": 4500, "max": 240000 },
+              "Total Coliform (MPN/100ml)": { "min": 11000, "max": 490000 },
+              "Faecal Streptococci (MPN/100ml)": { "min": 1300, "max": 54000 }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+
+
