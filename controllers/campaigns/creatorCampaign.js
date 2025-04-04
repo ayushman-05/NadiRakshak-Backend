@@ -30,7 +30,7 @@ const createCampaign = async (req, res) => {
       status: { $ne: "finished" },
     });
 
-    if (activeCampaignsCount >= 3) {
+    if (activeCampaignsCount >= 10) {
       return res.status(400).json({
         status: "fail",
         message: "You cannot create more than 3 active or upcoming campaigns",
