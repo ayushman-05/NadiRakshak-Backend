@@ -107,17 +107,21 @@ const getAcceptedReportLocations = async (req, res) => {
     const acceptedReports = await Report.find(
       { status: "Accepted" },
       // Only return the location data and id
-      { "location.coordinates": 1 }
+      { "location.coordinates": 1, "severity":1 }
     );
 
     // Extract and format the coordinates data
     const locations = acceptedReports.map((report) => {
       // MongoDB GeoJSON stores coordinates as [longitude, latitude]
       const [longitude, latitude] = report.location.coordinates;
+      const severity=report.severity;
+     // console.log(report);
+
       return {
         id: report._id,
         latitude,
         longitude,
+        severity
       };
     });
 
