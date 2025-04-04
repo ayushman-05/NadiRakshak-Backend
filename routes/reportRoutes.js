@@ -15,7 +15,8 @@ const {
   getReports,
   getReportsInArea,
   getReportStats,
-  getUserReports
+  getUserReports,
+  getAcceptedReportLocations
 } = require("../controllers/reports/reportQueryController");
 
 // Draft routes
@@ -34,5 +35,5 @@ router.get("/my-reports",protect,getUserReports);
 router.get("/", protect, getReports);
 router.get("/area", protect, getReportsInArea);
 router.get("/stats", protect, getReportStats);
-
+router.get("/accepted-locations",  getAcceptedReportLocations);
 module.exports = router;

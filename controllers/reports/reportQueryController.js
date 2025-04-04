@@ -100,6 +100,42 @@ const getUserReports = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+const getAcceptedReportLocations = async (req, res) => {
+  try {
+    // Find all reports with "Accepted" status
+    const acceptedReports = await Report.find(
+      { status: "Accepted" },
+      // Only return the location data and id
+      { "location.coordinates": 1 }
+    );
+
+    // Extract and format the coordinates data
+    const locations = acceptedReports.map((report) => {
+      // MongoDB GeoJSON stores coordinates as [longitude, latitude]
+      const [longitude, latitude] = report.location.coordinates;
+      return {
+        id: report._id,
+        latitude,
+        longitude,
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      count: locations.length,
+      locations,
+    });
+  } catch (error) {
+    console.error("Error fetching accepted report locations:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 // Get reports within a specified area (for map view)
 const getReportsInArea = async (req, res) => {
   try {
@@ -212,7 +248,7 @@ const getReportStats = async (req, res) => {
       severityCounts,
       statusCounts,
       reportsByDate,
-      hotspots,
+      hotspots
     });
   } catch (error) {
     console.error("Error getting report stats:", error);
@@ -220,4 +256,4 @@ const getReportStats = async (req, res) => {
   }
 };
 
-module.exports = { getReports, getReportsInArea, getReportStats,getUserReports };
+module.exports = { getReports, getAcceptedReportLocations, getReportsInArea, getReportStats,getUserReports };
