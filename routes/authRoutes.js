@@ -19,9 +19,11 @@ const {
 const {
   getUserPoints,getUserPointsHistory
 } =require("../controllers/getPoints.js");
+const { resendOTP } = require("../controllers/resendOtpController");
+
 const { protect } = require("../middleware/authMiddleware");
 
-
+router.post("/resend-otp", resendOTP);
 //for signing user
 router.post("/register", initiateSignup);
 router.post("/verify-otp", verifyOTPAndRegister);

@@ -10,6 +10,11 @@ const otpSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  resendAttempts: {
+    type: Number,
+    default: 0,
+    max: 1, // Maximum one resend attempt allowed
+  },
   createdAt: {
     type: Date,
     default: Date.now,

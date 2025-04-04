@@ -28,6 +28,7 @@ app.use("/api/v1/reports",reportRoutes);
 app.use("/api/v1/store", storeRouter);
 app.use("/api/v1/news", newsRoutes);
 app.use("/api/v1/rivers", riverRoutes);
+
 //for fun
 app.get("/", (req, res) => {
   res.send("Hello from server!!");

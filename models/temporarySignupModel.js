@@ -46,7 +46,7 @@ const temporarySignupSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["Inspection", "Public","Admin"],
+    enum: ["Inspection", "Public", "Admin"],
   },
   otp: {
     type: String,
@@ -56,6 +56,11 @@ const temporarySignupSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
     expires: 600, // OTP expires after 10 minutes
+  },
+  resendAttempts: {
+    type: Number,
+    default: 0,
+    max: 1, // Maximum one resend attempt allowed
   },
 });
 
