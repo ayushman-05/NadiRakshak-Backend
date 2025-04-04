@@ -51,11 +51,12 @@ const getReports = async (req, res) => {
   }
 };
 
-const getUserReports= async(req,res)=>{
+const getUserReports = async (req, res) => {
   try {
-    const filter = {};
+    // Set base filter to only include reports from the current user
+    const filter = { userId: req.user._id };
 
-    // Apply filters if provided
+    // Apply additional filters if provided
     if (req.query.severity) {
       filter.severity = req.query.severity;
     }
@@ -77,24 +78,28 @@ const getUserReports= async(req,res)=>{
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
+    // Get reports with pagination
     const reports = await Report.find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .populate("userId", "name email");
 
-    reports = reports.map((report) => report.userId === user._id);
-
-    //const total = await Report.countDocuments(filter);
+    // Get total count for pagination
+    const total = await Report.countDocuments(filter);
 
     res.status(200).json({
-      reports
+      reports,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-      
-}
+};
 // Get reports within a specified area (for map view)
 const getReportsInArea = async (req, res) => {
   try {

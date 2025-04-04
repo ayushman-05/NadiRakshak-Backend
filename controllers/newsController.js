@@ -38,13 +38,13 @@ exports.fetchAndUpdateNews = catchAsync(async (req, res, next) => {
     apiKey: process.env.NEWS_API_KEY,
    
     language: "en",
-    sortBy: "publishedAt",
+    sortBy: "relevancy",
     pageSize: 20,
   };
  let q= "(water OR river) AND (pollution OR conservation OR cleanup OR government OR scheme OR project)";
   try {
     // Fetch news from NewsAPI
-    const response = await axios.get(`https://newsapi.org/v2/everything?q=${q}&apiKey=${process.env.NEWS_API_KEY}&language=en&pageSize=10` );
+    const response = await axios.get(`https://newsapi.org/v2/everything?q=${q}&apiKey=${process.env.NEWS_API_KEY}&language=en&pageSize=10&sortBy=relevancy` );
 
     if (!response.data || !response.data.articles) {
       return next(new AppError("Failed to fetch news from API", 500));
