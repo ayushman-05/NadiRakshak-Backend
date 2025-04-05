@@ -53,9 +53,6 @@ const createCampaign = async (req, res) => {
       }
     }
 
-    // Set isGovernment field based on user role
-    // If user is admin, set isGovernment to true regardless of input
-    // Otherwise, use user input or default to false
     let isGovernment = false;
 
     if (req.user.role === "admin") {

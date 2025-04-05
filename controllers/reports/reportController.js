@@ -93,7 +93,7 @@ const submitReport = async (req, res) => {
     user.pointsHistory.push({
       points: 5,
       reason: "Reward for submitting pollution report",
-      source: "report_submission",
+      source: "Report Submission",
       sourceId: report._id,
     });
     await user.save({ session });
@@ -152,7 +152,7 @@ const updateReportStatus = async (req, res) => {
         user.pointsHistory.push({
           points: 20,
           reason: "Reward for approved pollution report",
-          source: "report_approval",
+          source: "Report Approval",
           sourceId: report._id,
         });
         await user.save({ session });

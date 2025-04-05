@@ -178,7 +178,7 @@ const createOrder = async (req, res) => {
     user.pointsHistory.push({
       points: -totalPointsCost,
       reason: `Redeemed points for store order #${newOrder[0]._id}`,
-      source: "store_purchase",
+      source: "Store Purchase",
       sourceId: newOrder[0]._id,
     });
     await user.save({ session });
