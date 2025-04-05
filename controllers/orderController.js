@@ -206,6 +206,7 @@ const createOrder = async (req, res) => {
       },
     });
   } catch (error) {
+    console.log(error);
     await session.abortTransaction();
     session.endSession();
     res.status(400).json({

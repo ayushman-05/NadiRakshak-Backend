@@ -136,7 +136,7 @@ exports.getStationData = async (req, res) => {
       }));
     });
 
-    console.log(parameters);
+    //console.log(parameters);
 
     res.status(200).json({
       status: "success",

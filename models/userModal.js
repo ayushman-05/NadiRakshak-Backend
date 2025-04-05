@@ -83,14 +83,6 @@ const userSchema = new mongoose.Schema(
         },
         source: {
           type: String,
-          enum: [
-            "Signup",
-            "Campaign Creation",
-            "Campaign Participation",
-            "Report Submission",
-            "Report Approval",
-            "Store Purchase",
-          ],
           required: true,
         },
         sourceId: {
