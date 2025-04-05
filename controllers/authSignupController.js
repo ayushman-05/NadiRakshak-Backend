@@ -90,7 +90,7 @@ const verifyOTPAndRegister = async (req, res) => {
     user.pointsHistory.push({
       points: 50,
       reason: "Welcome bonus for signing up",
-      source: "signup",
+      source: "Signup",
     });
     // Delete temporary signup entry
     await TemporarySignup.findOneAndDelete({ email, otp });

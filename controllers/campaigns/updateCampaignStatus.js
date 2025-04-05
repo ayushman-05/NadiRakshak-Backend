@@ -53,7 +53,7 @@ const updateCampaignStatuses = async (req, res) => {
             creator.pointsHistory.push({
               points: creatorPoints,
               reason: `Reward for completing campaign: ${campaign.title}`,
-              source: "campaign_creation",
+              source: "Campaign Creation",
               sourceId: campaign._id,
             });
             await creator.save({ session });
@@ -68,7 +68,7 @@ const updateCampaignStatuses = async (req, res) => {
             user.pointsHistory.push({
               points: 20,
               reason: `Reward for participating in campaign: ${campaign.title}`,
-              source: "campaign_participation",
+              source: "Campaign Participation",
               sourceId: campaign._id,
             });
             await user.save({ session });
