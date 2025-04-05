@@ -46,7 +46,7 @@ const protect = async (req, res, next) => {
     }
   } catch (error) {
     // Catch any unexpected server errors
-    console.error("Unexpected authentication error:", error);
+    //console.error("Unexpected authentication error:", error);
     return res.status(500).json({
       message: "Server authentication error",
       error: "SERVER_ERROR",

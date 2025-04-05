@@ -38,7 +38,7 @@ const getProfile = async (req, res) => {
       role: user.role,
       memberSince: user.createdAt,
       stats: stats,
-      //participatedCampaigns: user.participatedCampaigns,
+      points: user.points,
     };
 
     res.status(200).json({

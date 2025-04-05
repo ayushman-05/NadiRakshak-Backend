@@ -54,8 +54,6 @@ const sendOrderConfirmationEmail = async (user, order) => {
 
     await transporter.sendMail(email);
   } catch (error) {
-    console.error("Failed to send order confirmation email:", error);
-    // Don't throw the error, just log it - we don't want to fail the order if the email fails
   }
 };
 
@@ -206,7 +204,7 @@ const createOrder = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     await session.abortTransaction();
     session.endSession();
     res.status(400).json({

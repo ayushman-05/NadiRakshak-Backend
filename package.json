@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
+    "eslint": "^9.24.0",
     "exif-parser": "^0.1.12",
     "express": "^5.0.1",
     "express-mongo-sanitize": "^2.2.0",

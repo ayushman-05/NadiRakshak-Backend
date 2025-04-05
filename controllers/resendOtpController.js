@@ -124,7 +124,7 @@ const resendOTP = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error in resendOTP:", error);
+    //console.error("Error in resendOTP:", error);
     res.status(500).json({
       success: false,
       message: "Server error while resending OTP",

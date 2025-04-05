@@ -21,7 +21,7 @@ const sendOTPEmail = async (email, otp) => {
     await transporter.sendMail(mailOptions);
     return true;
   } catch (error) {
-    console.error("Error sending email:", error);
+    //console.error("Error sending email:", error);
     return false;
   }
 };

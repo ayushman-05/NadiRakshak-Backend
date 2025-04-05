@@ -115,7 +115,6 @@ const getAcceptedReportLocations = async (req, res) => {
       // MongoDB GeoJSON stores coordinates as [longitude, latitude]
       const [longitude, latitude] = report.location.coordinates;
       const severity=report.severity;
-     // console.log(report);
 
       return {
         id: report._id,
@@ -131,7 +130,7 @@ const getAcceptedReportLocations = async (req, res) => {
       locations,
     });
   } catch (error) {
-    console.error("Error fetching accepted report locations:", error);
+    //console.error("Error fetching accepted report locations:", error);
     res.status(500).json({
       success: false,
       message: error.message,

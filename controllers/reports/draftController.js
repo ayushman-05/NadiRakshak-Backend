@@ -1,10 +1,8 @@
 const DraftReport = require("../../models/draftReportModel");
 const { uploadFileToFirebase } = require("../../utils/fileUpload");
-// Removed the verifyImage import since we're no longer using it here
 
 const createDraftReport = async (req, res) => {
   try {
-    // Verify image is provided
     if (!req.file) {
       return res.status(400).json({ message: "No image provided" });
     }
@@ -28,8 +26,6 @@ const createDraftReport = async (req, res) => {
     // Upload image to Firebase
     const imageUrl = await uploadFileToFirebase(req.file, "pollution-reports");
 
-    // Removed AI verification step here
-
     // Default severity suggestion
     const severitySuggestion = "Medium";
 
@@ -50,7 +46,7 @@ const createDraftReport = async (req, res) => {
       draftReport,
     });
   } catch (error) {
-    console.error("Error creating draft report:", error);
+    //console.error("Error creating draft report:", error);
     res.status(500).json({ message: error.message });
   }
 };

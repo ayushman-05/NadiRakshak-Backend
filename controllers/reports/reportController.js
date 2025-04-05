@@ -152,7 +152,7 @@ const updateReportStatus = async (req, res) => {
         user.pointsHistory.push({
           points: 20,
           reason: "Reward for approved pollution report",
-          source: "Report Approval",
+          source: "Report Accepted",
           sourceId: report._id,
         });
         await user.save({ session });

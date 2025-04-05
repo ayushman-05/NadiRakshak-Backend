@@ -33,14 +33,6 @@ const categorizeNews = (title, description) => {
 };
 
 exports.fetchAndUpdateNews = catchAsync(async (req, res, next) => {
-  // NewsAPI parameters
-  const params = {
-    apiKey: process.env.NEWS_API_KEY,
-   
-    language: "en",
-    sortBy: "relevancy",
-    pageSize: 20,
-  };
  let q= "(water OR river) AND (pollution OR conservation OR cleanup OR government OR scheme OR project)";
   try {
     // Fetch news from NewsAPI
@@ -96,7 +88,7 @@ exports.fetchAndUpdateNews = catchAsync(async (req, res, next) => {
       throw error;
     }
   } catch (error) {
-    console.error("Error fetching or updating news:", error);
+    //console.error("Error fetching or updating news:", error);
     return next(new AppError("Failed to update news database", 500));
   }
 });

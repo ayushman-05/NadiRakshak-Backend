@@ -4,10 +4,6 @@ const User = require("../../models/userModal");
 // Get all campaigns (with filters)
 const getAllCampaigns = async (req, res) => {
   try {
-    // Build query
-    //let query = {};
-    console.log(req.user);
-    
     // Regular query without the available spots filter
     const campaigns = await Campaign.find();
 
@@ -46,7 +42,6 @@ const getAllCampaigns = async (req, res) => {
 const getActiveAndUpcomingCampaigns = async (req, res) => {
   try {
 
-    console.log(req.user);
     // Build query - only include active and upcoming campaigns
     let query = { status: { $in: ["active", "upcoming"] } };
 
@@ -54,8 +49,6 @@ const getActiveAndUpcomingCampaigns = async (req, res) => {
     if (req.query.isGovernment !== undefined) {
       query.isGovernment = req.query.isGovernment === "true";
     }
-
-
 
     // Regular query without the available spots filter
     const campaigns = await Campaign.find(query);

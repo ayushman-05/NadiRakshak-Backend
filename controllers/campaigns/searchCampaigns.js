@@ -1,5 +1,3 @@
-// controllers/campaigns/searchCampaigns.js
-
 const Campaign = require("../../models/campaignModel");
 
 /**
